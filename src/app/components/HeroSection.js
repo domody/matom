@@ -4,7 +4,7 @@ import HeroPrev from "./HeroPrev";
 const HeroSection = () => {
   return (
     <div className="relative flex min-h-screen w-full flex-col items-center justify-start pt-52">
-      <div className="flex w-full max-w-5xl items-start justify-center px-2 md:px-0">
+      <div className="flex w-full container items-start justify-center px-2 md:px-0">
         <div className="flex flex-col items-center justify-start gap-6 text-center">
           <h1 className="text-6xl font-medium opacity-95">Welcome to Matom</h1>
           <p className="text-lg opacity-70">
