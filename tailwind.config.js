@@ -6,10 +6,21 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    darkMode: 'selector',
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        theme: {
+          50: '#495363', 
+          100: '#3f4958',
+          200: '#333e4f',
+          300: '#282f3e',
+          400: '#1d2331',
+          500: '#171f2b', 
+          600: '#121720',
+          700: '#10151d', 
+          800: '#0b0e14',
+          900: '#080a0e', 
+        },
       },
     },
   },
