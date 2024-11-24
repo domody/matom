@@ -17,13 +17,13 @@ const CTASection = () => {
 
 const FooterSection = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-start bg-white border-t border-gray-300 py-24">
+    <footer className="flex w-full flex-col items-center justify-start bg-white border-t border-gray-300 py-24">
       <div className="relative flex w-full max-w-5xl flex-col items-start justify-start gap-16">
         <div className="flex w-full items-center justify-between gap-2 text-left">
             Footer
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
