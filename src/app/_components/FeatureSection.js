@@ -4,9 +4,9 @@ import { Box } from "lucide-react";
 
 const FeatureSection = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-white via-white to-gray-100 py-48">
+    <div className="dark:from-dark-900 dark:via-dark-900 dark:to-dark-800 flex w-full flex-col items-center justify-start overflow-hidden bg-gradient-to-b from-white via-white to-gray-100 py-48">
       <div className="container relative flex w-full flex-col items-start justify-start gap-16">
-        <div className="flex w-full xl:w-4/6 flex-col items-start justify-start gap-2 text-left md:pr-2">
+        <div className="flex w-full flex-col items-start justify-start gap-2 text-left md:pr-2 xl:w-4/6">
           <p className="w-full font-medium">Be faster</p>
           <h1 className="w-full text-5xl font-semibold opacity-95">
             Unlock your productivity

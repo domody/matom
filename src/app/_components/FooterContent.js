@@ -2,8 +2,8 @@ import React from "react";
 
 const CTASection = () => {
   return (
-    <div className="flex w-full flex-col items-center justify-start bg-gradient-to-b from-gray-100 to-gray-200 py-24">
-      <div className="relative flex w-full container flex-col items-start justify-start gap-16">
+    <div className="dark:from-dark-800 dark:to-dark-700 flex w-full flex-col items-center justify-start bg-gradient-to-b from-gray-100 to-gray-200 py-24">
+      <div className="container relative flex w-full flex-col items-start justify-start gap-16">
         <div className="flex w-full items-center justify-between gap-2 text-left">
           <h1 className="w-1/2 text-5xl font-semibold opacity-95">
             Get Started with Matom Today
@@ -17,10 +17,10 @@ const CTASection = () => {
 
 const FooterSection = () => {
   return (
-    <footer className="flex w-full flex-col items-center justify-start bg-white border-t border-gray-300 py-24">
-      <div className="relative flex w-full container flex-col items-start justify-start gap-16">
+    <footer className="dark:border-dark-400 dark:bg-dark-900 flex w-full flex-col items-center justify-start border-t border-gray-300 bg-white py-24">
+      <div className="container relative flex w-full flex-col items-start justify-start gap-16">
         <div className="flex w-full items-center justify-between gap-2 text-left">
-            Footer
+          Footer
         </div>
       </div>
     </footer>

@@ -17,3 +17,7 @@
     transform-style: preserve-3d;
     transform: rotateY(30deg);
 }
+
+::selection {
+    background: #333333
+}

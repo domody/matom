@@ -9,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`box-border overflow-x-hidden bg-white antialiased`}>
+      <body
+        className={`dark:bg-dark-900 box-border overflow-x-hidden bg-white antialiased dark:text-white`}
+      >
         {children}
       </body>
     </html>

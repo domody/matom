@@ -1,16 +1,17 @@
 import "./globals.css";
+import { ThemeProvider } from "./_hooks/ThemeContext";
 
-import HeroSection from "./components/HeroSection";
-import FeatureSection from "./components/FeatureSection";
-import TasksSection from "./components/TasksSection";
-import DocSection from "./components/DocSection";
-import AnalyticsSection from "./components/AnalyticsSection";
-import { CTASection, FooterSection } from "./components/FooterContent";
-import Navbar from "./components/Navbar";
+import HeroSection from "./_components/HeroSection";
+import FeatureSection from "./_components/FeatureSection";
+import TasksSection from "./_components/TasksSection";
+import DocSection from "./_components/DocSection";
+import AnalyticsSection from "./_components/AnalyticsSection";
+import { CTASection, FooterSection } from "./_components/FooterContent";
+import Navbar from "./_components/Navbar";
 
 export default function Home() {
   return (
-    <>
+    <ThemeProvider>
       <Navbar />
       <main className="flex w-screen flex-col items-center justify-center">
         {/*  */}
@@ -28,6 +29,6 @@ export default function Home() {
         {/*  */}
         <FooterSection />
       </main>
-    </>
+    </ThemeProvider>
   );
 }
