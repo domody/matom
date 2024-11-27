@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
+      "@components/*": ["./src/app/_components/ui/*"],
       "@/*": ["./src/*"]
     }
   }
