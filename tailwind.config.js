@@ -5,7 +5,6 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "selector",
   theme: {
     extend: {
       colors: {
@@ -50,7 +49,7 @@ module.exports = {
         md: "728px",
         lg: "984px",
         xl: "1056px",
-        "2xl": "10256px",
+        "2xl": "1056px",
       },
     },
   },

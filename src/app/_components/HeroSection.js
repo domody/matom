@@ -13,9 +13,9 @@ const HeroSection = () => {
             that enhances productivity and collaboration.
           </p>
           <div className="flex items-center justify-center gap-6">
-            <button className="dark:text-dark-900 rounded-md bg-black/85 px-6 py-1.5 text-white transition-all dark:bg-white/95 dark:hover:bg-white">
+            <a href="/app" className="dark:text-dark-900 rounded-md cursor-pointer bg-black/85 px-6 py-1.5 text-white transition-all dark:bg-white/95 dark:hover:bg-white">
               Get Started
-            </button>
+            </a>
             <button className="dark:hover:bg-dark-800 flex items-center justify-center gap-2 rounded-md px-6 py-1.5 text-black/85 transition-all hover:bg-gray-100 dark:text-white/85">
               Learn more
             </button>

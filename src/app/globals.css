@@ -21,3 +21,7 @@
 ::selection {
     background: #333333
 }
+
+.scroll-hidden::-webkit-scrollbar {
+    display: none;
+}

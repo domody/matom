@@ -16,22 +16,11 @@ export const ThemeProvider = ({ children }) => {
     const storedTheme = localStorage.getItem("theme") || "light";
     if (storedTheme) {
       setTheme(storedTheme);
-      updateHtmlClass(storedTheme);
     }
   }, []);
 
-  const updateHtmlClass = (newTheme) => {
-    const root = window.document.documentElement;
-    if (newTheme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  };
-
   const updateTheme = (newTheme) => {
     setTheme(newTheme);
-    updateHtmlClass(newTheme);
     localStorage.setItem("theme", newTheme);
   };
 
