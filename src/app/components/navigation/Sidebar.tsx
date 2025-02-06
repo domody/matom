@@ -4,7 +4,7 @@ import appData from "@/app/app/appData.json";
 
 export function Sidebar({ className }: { className?: string }) {
   return (
-    <div className="h-full flex flex-col p-4 pb-8 bg-surface-1 sm:w-64 border-r border-border-muted">
+    <div className={cn("h-full flex flex-col p-4 pb-8 bg-surface-1 sm:w-64 border-r border-border-muted", className)}>
       {/* Top section */}
       <div className="flex items-center gap-x-2 w-full overflow-x-scroll scrollbar-hide">
         <div className="size-6 rounded-full bg-primary-foreground shrink-0" />
