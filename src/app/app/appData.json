@@ -2,15 +2,15 @@
   "links": {
     "sidebar": {
       "defaults": [
-        { "name": "Inbox", "path": "/" },
-        { "name": "My tasks", "path": "/tasks" }
+        { "name": "Inbox", "path": "/inbox", "icon": "inbox" },
+        { "name": "Dashboard", "path": "/", "icon": "slidersVertical"  }
       ],
       "workspaces": [
-        { "name": "Calendar", "path": "/calendar" },
-        { "name": "Docs", "path": "/docs" },
-        { "name": "Tasks", "path": "/tasks" }
+        { "name": "Calendar", "path": "/calendar", "icon": "calendar"  },
+        { "name": "Docs", "path": "/docs", "icon": "file"  },
+        { "name": "Tasks", "path": "/tasks", "icon": "listTodo"  }
       ],
-      "options": [{ "name": "Settings", "path": "/settings" }]
+      "options": [{ "name": "Settings", "path": "/settings", "icon": "cog"  }]
     }
   }
 }
