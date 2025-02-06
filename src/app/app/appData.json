@@ -1,7 +1,7 @@
 {
   "links": {
     "sidebar": {
-      "pages": [
+      "workspaces": [
         { "name": "Calendar", "path": "/calendar" },
         { "name": "Docs", "path": "/docs" },
         { "name": "Tasks", "path": "/tasks" }

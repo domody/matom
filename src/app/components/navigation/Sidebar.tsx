@@ -25,11 +25,27 @@ export function Sidebar({ className }: { className?: string }) {
         ></input>
         <Search className="size-[14px] stroke-text-muted absolute top-1.5 left-2" />
       </div>
-      {/* Links */}
+        {/* Workspaces */}
+        <div className="flex flex-col mt-6">
+        <p className="text-xs text-text-muted mb-2">Workspace</p>
+        <div className="w-full flex flex-col items-start justify-start space-y-0.5">
+          {appData.links.sidebar.workspaces.map((page, index) => {
+            return (
+              <div
+                className="w-full hover:bg-surface-2 flex justify-start px-2 items-center text-sm text-text-secondary h-8 rounded cursor-pointer"
+                key={"sidebarLink." + index}
+              >
+                {page.name}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* Workspaces */}
       <div className="flex flex-col mt-6">
         <p className="text-xs text-text-muted mb-2">Workspace</p>
         <div className="w-full flex flex-col items-start justify-start space-y-0.5">
-          {appData.links.sidebar.pages.map((page, index) => {
+          {appData.links.sidebar.workspaces.map((page, index) => {
             return (
               <div
                 className="w-full hover:bg-surface-2 flex justify-start px-2 items-center text-sm text-text-secondary h-8 rounded cursor-pointer"
