@@ -1,6 +1,10 @@
 {
   "links": {
     "sidebar": {
+      "defaults": [
+        { "name": "Inbox", "path": "/" },
+        { "name": "My tasks", "path": "/tasks" }
+      ],
       "workspaces": [
         { "name": "Calendar", "path": "/calendar" },
         { "name": "Docs", "path": "/docs" },
