@@ -1,0 +1,12 @@
+{
+  "links": {
+    "sidebar": {
+      "pages": [
+        { "name": "Calendar", "path": "/calendar" },
+        { "name": "Docs", "path": "/docs" },
+        { "name": "Tasks", "path": "/tasks" }
+      ],
+      "options": [{ "name": "Settings", "path": "/settings" }]
+    }
+  }
+}

@@ -1,42 +1,107 @@
+@import "tailwindcss";
+@import "tailwindcss/preflight.css" layer(base);
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: oklch(95.51% 0 0);
+  --foreground: oklch(20.46% 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Base colors */
+    --background: oklch(14.48% 0 0); /* Darkest, near-black */
+    --foreground: oklch(94.61% 0 0); /* Lightest, text color */
+
+    /* Surface colors for layering */
+    --surface-1: oklch(18% 0.005 250); /* Slightly lighter than background */
+    --surface-2: oklch(24% 0.005 250); /* Mid-dark */
+    --surface-3: oklch(32% 0.005 250); /* Even lighter */
+
+    /* Borders and subtle dividers */
+    --border: oklch(30% 0.01 0);
+    --border-muted: oklch(25% 0.005 0);
+
+    /* Primary accent (interactive elements, buttons, links) */
+    --primary: oklch(70% 0.2 280); /* Vibrant purple */
+    --primary-hover: oklch(75% 0.22 280);
+    --primary-muted: oklch(60% 0.15 280);
+
+    /* Secondary accent (less prominent interactions) */
+    --secondary: oklch(65% 0.2 200); /* Cyan-blue */
+    --secondary-hover: oklch(70% 0.22 200);
+    --secondary-muted: oklch(55% 0.15 200);
+
+    /* Text */
+    --text-primary: var(--foreground);
+    --text-secondary: oklch(80% 0 0); /* Muted white */
+    --text-muted: oklch(65% 0 0); /* Dimmed */
+
+    /* Success, warning, error states */
+    --success: oklch(65% 0.2 150); /* Green */
+    --warning: oklch(75% 0.2 80); /* Yellow-orange */
+    --error: oklch(65% 0.22 20); /* Red */
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+@theme {
+  /* Base colors */
+  --color-primary: var(--background);
+  --color-primary-foreground: var(--foreground);
+
+  /* Layered surfaces */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+
+  /* Accents */
+  --color-accent: var(--primary);
+  --color-accent-hover: var(--primary-hover);
+  --color-accent-muted: var(--primary-muted);
+
+  /* Secondary accents */
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-muted: var(--secondary-muted);
+
+  /* Feedback colors */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  /* Text */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  /* Animation easings */
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }
+}
+
+h1 {
+  font-size: var(--text-5xl);
+  line-height: var(--text-5xl--line-height);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  line-height: var(--text-3xl--line-height);
+}
+
+h3 {
+  font-size: var(--text-xl);
+  line-height: var(--text-xl--line-height);
 }
