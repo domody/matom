@@ -6,9 +6,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="w-screen h-screen overflow-auto flex">
+    <main className="flex h-screen w-screen overflow-auto">
       <Sidebar />
       {children}
-      </main>
+    </main>
   );
 }
