@@ -9,7 +9,6 @@
   :root {
     /* Base colors */
     --background: oklch(14.48% 0 0); /* Darkest, near-black */
-    --foreground: oklch(94.61% 0 0); /* Lightest, text color */
 
     /* Surface colors for layering */
     --surface-1: oklch(18% 0.005 250); /* Slightly lighter than background */
@@ -21,9 +20,9 @@
     --border-muted: oklch(25% 0.005 0);
 
     /* Primary accent (interactive elements, buttons, links) */
-    --primary: oklch(70% 0.2 280); /* Vibrant purple */
-    --primary-hover: oklch(75% 0.22 280);
-    --primary-muted: oklch(60% 0.15 280);
+    --accent: oklch(70% 0.2 265); /* Vibrant purple */
+    --accent-hover: oklch(75% 0.22 265);
+    --accent-muted: oklch(60% 0.15 265);
 
     /* Secondary accent (less prominent interactions) */
     --secondary: oklch(65% 0.2 200); /* Cyan-blue */
@@ -31,7 +30,7 @@
     --secondary-muted: oklch(55% 0.15 200);
 
     /* Text */
-    --text-primary: var(--foreground);
+    --text-primary: oklch(94.61% 0 0);
     --text-secondary: oklch(80% 0 0); /* Muted white */
     --text-muted: oklch(65% 0 0); /* Dimmed */
 
@@ -45,7 +44,6 @@
 @theme {
   /* Base colors */
   --color-primary: var(--background);
-  --color-primary-foreground: var(--foreground);
 
   /* Layered surfaces */
   --color-surface-1: var(--surface-1);
@@ -57,9 +55,9 @@
   --color-border-muted: var(--border-muted);
 
   /* Accents */
-  --color-accent: var(--primary);
-  --color-accent-hover: var(--primary-hover);
-  --color-accent-muted: var(--primary-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
 
   /* Secondary accents */
   --color-secondary: var(--secondary);

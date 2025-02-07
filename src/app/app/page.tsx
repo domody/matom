@@ -4,7 +4,10 @@ export default function Dashboard() {
       <div className="border-border-muted flex h-14 w-full items-center border-b px-4">
         <h3 className="font-medium">Dashboard / Home</h3>
       </div>
-      <div className="flex w-full flex-col p-4"></div>
+      <div className="flex w-full flex-col p-4">
+      <div className="w-96 h-48 bg-accent rounded"></div>
+      </div>
+
     </div>
   );
 }
