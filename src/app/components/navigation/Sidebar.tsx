@@ -1,9 +1,8 @@
 "use client";
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/app/utils/cn";
 import appData from "@/app/app/appData.json";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import {
   ChevronDown,
@@ -11,9 +10,11 @@ import {
   Inbox,
   ListTodo,
   Calendar,
-  File,
+  Users,
+  Layers,
   Cog,
-  SlidersVertical
+  SlidersVertical,
+  ChevronsLeft,
 } from "lucide-react";
 import { useEffect } from "react";
 
@@ -23,7 +24,8 @@ const iconMap: { [key: string]: React.ElementType } = {
   inbox: Inbox,
   listTodo: ListTodo,
   calendar: Calendar,
-  file: File,
+  layers: Layers,
+  users: Users,
   cog: Cog,
   slidersVertical: SlidersVertical,
 };
@@ -50,7 +52,7 @@ function SidebarLink({
     } else {
       setPathname(_pathname);
     }
-  }, []);
+  }, [_pathname]);
 
   // Get icon component
   const IconComponent = icon ? iconMap[icon] : null;
@@ -62,10 +64,10 @@ function SidebarLink({
       {IconComponent && (
         <IconComponent
           size={16}
-          className="group-hover:stroke-primary-foreground stroke-text-muted transition-all"
+          className="group-hover:stroke-text-primary stroke-text-muted shrink-0 transition-all"
         />
       )}
-      <p className="group-hover:text-primary-foreground text-text-muted transition-all">
+      <p className="group-hover:text-text-primary text-text-muted transition-all">
         {name}
       </p>
     </a>
@@ -73,30 +75,32 @@ function SidebarLink({
 }
 
 export function Sidebar({ className }: { className?: string }) {
+  const searchBarRef = useRef<HTMLInputElement>(null);
+
   return (
-    <div
-      className={cn(
-        "bg-surface-1 border-border-muted flex h-full flex-col border-r p-4 pb-8 sm:w-64",
-        className,
-      )}
-    >
+    <div className="bg-surface-1 ease-fluid border-border-muted flex h-full w-12 flex-col border-r p-4 pt-0 pb-8 transition-all sm:w-64">
       {/* Top section */}
-      <div className="scrollbar-hide flex w-full items-center gap-x-2 overflow-x-scroll">
-        <div className="bg-primary-foreground size-6 shrink-0 rounded-full" />
-        <span className="text-text-muted ml-2">/</span>
-        <div className="hover:bg-surface-2 group flex cursor-pointer items-center gap-x-1 rounded px-2 py-1 transition-all">
-          <p className="text-text-secondary group-hover:text-primary-foreground transition-all">
-            workspace
-          </p>
-          <ChevronDown className="stroke-text-muted group-hover:stroke-primary-foreground mt-1 size-4 transition-all" />
+      <div className="scrollbar-hide flex h-14 w-full items-center gap-x-2 overflow-x-scroll">
+        {/* Icon */}
+        <div className="bg-text-primary size-[31px] shrink-0 rounded-full" />
+        {/* Workspace */}
+        <div className="flex items-center gap-x-2">
+          <span className="text-text-muted ml-2">/</span>
+          <div className="hover:bg-surface-2 group flex cursor-pointer items-center gap-x-1 rounded px-2 py-1 transition-all">
+            <p className="text-text-secondary group-hover:text-text-primary transition-all">
+              workspace
+            </p>
+            <ChevronDown className="stroke-text-muted group-hover:stroke-text-primary mt-1 size-4 transition-all" />
+          </div>
         </div>
       </div>
       {/* Search */}
-      <div className="relative mt-6">
+      <div className="relative mt-2">
         <input
+          ref={searchBarRef}
           type="text"
           placeholder="Search..."
-          className="bg-surface-2 border-border h-6 w-full rounded border pl-7 text-sm outline-0 placeholder:text-sm focus:border-white/15"
+          className="bg-surface-2 border-border h-6 w-full cursor-pointer rounded border pl-7 text-sm outline-0 placeholder:text-sm focus:border-white/25"
         ></input>
         <Search className="stroke-text-muted absolute top-1.5 left-2 size-[14px]" />
       </div>
@@ -118,7 +122,9 @@ export function Sidebar({ className }: { className?: string }) {
       </div>
       {/* Workspaces */}
       <div className="mt-6 flex flex-col">
-        <p className="text-text-muted mb-2 text-xs">Workspace</p>
+        <p className="text-text-muted mb-2 text-xs transition-all">
+          Workspaces
+        </p>
         <div className="flex w-full flex-col items-start justify-start space-y-0.5">
           {appData.links.sidebar.workspaces.map((page, index) => {
             return (
@@ -134,7 +140,7 @@ export function Sidebar({ className }: { className?: string }) {
         </div>
       </div>
       {/* Bottom Links */}
-      <div className="mt-auto flex flex-col">
+      <div className="mt-auto flex flex-col space-y-0.5">
         {appData.links.sidebar.options.map((page, index) => {
           return (
             <React.Fragment key={index}>

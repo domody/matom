@@ -6,9 +6,10 @@
         { "name": "Dashboard", "path": "/", "icon": "slidersVertical"  }
       ],
       "workspaces": [
+        { "name": "Projects", "path": "/projects", "icon": "layers"  },
+        { "name": "Tasks", "path": "/tasks", "icon": "listTodo"  },
         { "name": "Calendar", "path": "/calendar", "icon": "calendar"  },
-        { "name": "Docs", "path": "/docs", "icon": "file"  },
-        { "name": "Tasks", "path": "/tasks", "icon": "listTodo"  }
+        { "name": "Teams", "path": "/teams", "icon": "users"  }
       ],
       "options": [{ "name": "Settings", "path": "/settings", "icon": "cog"  }]
     }
