@@ -99,10 +99,12 @@ export function TaskItemTag({ tag }: { tag: string }) {
 }
 
 export interface TaskItemProps {
+  uuid: string;
   team: string;
   id: number;
   status: "Pending" | "InProgress" | "InReview" | "Completed" | "Blocked";
   title: string;
+  body: string;
   tags: string[];
   startDate: string;
   endDate: string;
