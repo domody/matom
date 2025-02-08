@@ -135,8 +135,8 @@ export function TaskItem({
   const statusIconStyleClass = {
     Pending: "stroke-text-muted",
     InProgress: "stroke-orange-400",
-    InReview: "stroke-blue-500",
-    Completed: "stroke-green-500",
+    InReview: "stroke-blue-400",
+    Completed: "stroke-green-400",
     Blocked: "stroke-red-500",
   }[task.status];
 

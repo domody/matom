@@ -58,7 +58,7 @@ function SidebarLink({
   const IconComponent = icon ? iconMap[icon] : null;
   return (
     <a
-      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm ${pathname == path ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}`}
+      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm transition-all ${pathname == path ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}`}
       href={`/app${path}`}
     >
       {IconComponent && (
@@ -78,7 +78,7 @@ export function Sidebar({ className }: { className?: string }) {
   const searchBarRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="bg-surface-1 ease-fluid border-border-muted flex h-full w-12 flex-col border-r p-4 pt-0 pb-8 transition-all sm:w-64">
+    <div className="bg-surface-1 border-border-muted flex h-full w-12 flex-col border-r p-4 pt-0 pb-8 transition-all sm:w-64">
       {/* Top section */}
       <div className="scrollbar-hide flex h-14 w-full items-center gap-x-2 overflow-x-scroll">
         {/* Icon */}

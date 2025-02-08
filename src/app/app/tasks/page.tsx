@@ -157,7 +157,7 @@ const tasks = [
 
 export default function Tasks() {
   const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
-  
+
   return (
     <div className="flex h-full w-[calc(100%-16rem)] flex-col overflow-x-hidden">
       <div className="border-border-muted flex h-14 w-full items-center border-b px-4">
@@ -176,7 +176,7 @@ export default function Tasks() {
           ))}
         </div>
         <div
-          className={`border-border-muted flex h-full shrink-0 flex-col overflow-x-hidden border-l p-4 transition-all ${taskSelected ? "w-1/2" : "hidden w-0"}`}
+          className={`border-border-muted flex h-full shrink-0 flex-col overflow-x-hidden border-l p-6 transition-all ${taskSelected ? "w-1/2" : "hidden w-0"}`}
         >
           <h3 className="font-medium">{taskSelected?.title}</h3>
           other stuff...
