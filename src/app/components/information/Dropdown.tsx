@@ -1,5 +1,11 @@
 "use client";
-import React, { useState, useEffect, useRef, createContext, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  useContext,
+} from "react";
 import { cn } from "@/app/utils/cn";
 
 interface DropdownContextProps {
@@ -79,7 +85,8 @@ function DropdownTrigger({ children }: { children: React.ReactNode }) {
   const context = useContext(DropdownContext);
   if (!context) throw new Error("DropdownTrigger must be used inside Dropdown");
 
-  const { openMenu, closeMenu, toggleMenuOpen, onHover, dropdownTriggerRef } = context;
+  const { openMenu, closeMenu, toggleMenuOpen, onHover, dropdownTriggerRef } =
+    context;
 
   return (
     <div
@@ -110,17 +117,19 @@ function DropdownMenu({
 
   const positionClass =
     {
-      left: "left-0",
-      center: "left-1/2 -translate-x-1/2",
-      right: "right-0",
-    }[position] || "left-1/2 -translate-x-1/2";
+      left: "left-0 origin-top-left",
+      center: "left-1/2 -translate-x-1/2  origin-top",
+      right: "right-0 origin-top-right",
+    }[position] || "left-1/2 -translate-x-1/2 origin-top";
 
   return (
     <div
       ref={dropdownRef}
       className={cn(
-        `absolute z-[99] top-[calc(100%+8px)] origin-top shadow-md transition-all ${positionClass} ${
-          dropdownMenuOpen ? "opacity-100" : "pointer-events-none scale-90 opacity-0"
+        `absolute top-[calc(100%+8px)] z-[99] shadow-md transition-all ${positionClass} ${
+          dropdownMenuOpen
+            ? "opacity-100"
+            : "pointer-events-none scale-90 opacity-0"
         }`,
         className,
       )}

@@ -33,6 +33,8 @@ function FiltersDropdownItem({
       "FiltersDropdownItem must be used within a FiltersDropdown",
     );
 
+  const childrenCount = React.Children.count(children);
+
   const { openItem, setOpenItem } = context;
   const isOpen = openItem === title;
 
@@ -43,7 +45,7 @@ function FiltersDropdownItem({
   return (
     <div className="flex w-full flex-col">
       <div
-        className="hover:bg-surface-2/50 flex h-8 w-full cursor-pointer z-10 items-center justify-start gap-x-2 px-4 transition-all"
+        className="hover:bg-surface-2/50 z-10 flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 px-4 transition-all"
         onClick={handleClick}
       >
         <ChevronRight
@@ -56,7 +58,8 @@ function FiltersDropdownItem({
         <p>{title}</p>
       </div>
       <div
-        className={`bg-surface-0 flex w-full flex-col transition-all ${isOpen ? "h-[180px]" : "h-0 opacity-0"}`}
+        className={`bg-primary flex w-full flex-col overflow-hidden transition-all`}
+        style={{ height: isOpen ? childrenCount * 36 : 0 }}
       >
         {children}
       </div>
@@ -64,10 +67,15 @@ function FiltersDropdownItem({
   );
 }
 
+import { Check } from "lucide-react";
 function FiltersDropdownOption({ option }: { option: string }) {
+  const isActive = false;
   return (
-    <div className={`hover:bg-surface-2 h-9 px-4 py-2 transition-all z-0`}>
-      <p className="text-text-muted">{option}</p>
+    <div
+      className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-9 shrink cursor-pointer items-center justify-between overflow-hidden px-4 py-2 transition-all`}
+    >
+      <p className="">{option}</p>
+      {isActive && <Check size={16} />}
     </div>
   );
 }

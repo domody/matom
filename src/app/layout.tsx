@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${geistMono.variable} bg-primary text-text-primary`}
+        className={`${inter.variable} ${geistMono.variable} bg-primary text-text-primary selection:bg-neutral-400 dark:selection:bg-neutral-700`}
       >
         {children}
       </body>
