@@ -6,30 +6,6 @@ import appData from "@/app/app/appData.json";
 import { useState } from "react";
 import { useEffect } from "react";
 
-function SidebarLink({
-  icon,
-  name,
-  path,
-}: {
-  icon?: string;
-  name: string;
-  path: string;
-}) {
-  const [pathname, setPathname] = useState<string>("");
-
-  // Get current url after the /app path
-  // Store as temp variable
-  const _pathname = usePathname().slice(4);
-
-  // If the path is null (i.e. at home), then set pathname to /, else js set it to _pathname
-  useEffect(() => {
-    if (_pathname == "") {
-      setPathname("/");
-    } else {
-      setPathname(_pathname);
-    }
-  }, []);
-}
 
 export function InboxMessage({ className, title, content }: { className?: string, title: string, content: string }) {
   return (
