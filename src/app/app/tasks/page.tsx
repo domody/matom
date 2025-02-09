@@ -89,7 +89,7 @@ export default function Tasks() {
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
-                <p>No body for this task,</p>
+                <p>No body for this task.</p>
               )}
             </>
           ) : (
