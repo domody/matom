@@ -78,7 +78,7 @@ export function Sidebar({ className }: { className?: string }) {
   const searchBarRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="bg-surface-1 border-border-muted flex h-full w-12 flex-col border-r p-4 pt-0 pb-8 transition-all sm:w-64">
+    <div className="bg-surface-1 shrink-0 border-border-muted flex h-full w-12 flex-col border-r p-4 pt-0 pb-8 transition-all sm:w-64">
       {/* Top section */}
       <div className="scrollbar-hide flex h-14 w-full items-center gap-x-2 overflow-x-scroll">
         {/* Icon */}

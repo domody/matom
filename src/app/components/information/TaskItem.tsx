@@ -87,7 +87,7 @@ function getDateString(date: string, yearIncl: boolean = false) {
   const month = getMonth(splitDate[1]);
   const day = splitDate[2];
 
-  return `${month} ${day.split(" ")[0]} ${yearIncl ? year : ""}`; // "06 Feb 2025"
+  return `${month} ${day.split("T")[0]} ${yearIncl ? year : ""}`; // "06 Feb 2025"
 }
 
 export function TaskItemTag({ tag }: { tag: string }) {
@@ -130,6 +130,13 @@ export function TaskItem({
     Critical: "stroke-red-500",
   }[task.priority];
 
+  const priorityBackgroundStyleClass = {
+    Low: "hover:bg-surface-2 ",
+    Medium: "hover:bg-surface-2 ",
+    High: "shover:bg-surface-2 ",
+    Critical: "hover:bg-red-400/20",
+  }[task.priority];
+
   const PriorityIconComponent = task.priority
     ? priorityIconMap[task.priority]
     : null;
@@ -142,13 +149,23 @@ export function TaskItem({
     Blocked: "stroke-red-500",
   }[task.status];
 
+  const statusBackgroundStyleClass = {
+    Pending: "bg-surface-1 hover:bg-surface-2",
+    InProgress: "bg-orange-400/5 hover:bg-orange-400/15",
+    InReview: "bg-blue-400/5 hover:bg-blue-400/15",
+    Completed: "bg-green-400/5 hover:bg-green-400/15",
+    Blocked: "bg-red-400/10 hover:bg-red-400/20",
+  }[task.status];
+
   const StatusIconComponent = task.status ? statusIconMap[task.status] : null;
   return (
     <div
-      className="border-border hover:bg-surface-1 flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
+      className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
       onClick={() => setTaskSelected(task)}
     >
-      <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
+      <div
+        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass}`}
+      >
         {PriorityIconComponent && (
           <PriorityIconComponent
             size={16}
@@ -159,7 +176,9 @@ export function TaskItem({
       <p className="text-text-muted w-16 shrink-0">
         {task.team.slice(0, 3).toUpperCase()}-{task.id}
       </p>
-      <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
+      <div
+        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${statusBackgroundStyleClass}`}
+      >
         {StatusIconComponent && (
           <StatusIconComponent
             size={16}
@@ -173,14 +192,36 @@ export function TaskItem({
           <TaskItemTag tag={tag} key={index} />
         ))}
       </TaskItemTagWrapper>
-      <p className="srhink-0 text-text-secondary text-nowrap">
+      <p className="srhink-0 text-text-muted text-nowrap">
         {getDateString(task.lastUpdated)}
       </p>
-      <p className="srhink-0 text-text-secondary text-nowrap">
+      <p className="srhink-0 text-text-muted text-nowrap">
         {getDateString(task.endDate)}
       </p>
       <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
         <Ellipsis size={16} className="stroke-text-muted" />
+      </div>
+    </div>
+  );
+}
+
+import { LucideIcon } from "lucide-react";
+
+interface TaskInfoProps {
+  icon: LucideIcon;
+  info: string;
+  data: string | string[];
+}
+
+export function TaskInfo({ icon: Icon, info, data }: TaskInfoProps) {
+  return (
+    <div className="flex items-center justify-start gap-x-2">
+      <div className="flex w-36 items-center justify-start gap-x-2">
+        <Icon size={16} className="stroke-text-muted" />
+        <p>{info}</p>
+      </div>
+      <div>
+        {Array.isArray(data) ? <p>{data.join(", ")}</p> : <p>{data}</p>}
       </div>
     </div>
   );
