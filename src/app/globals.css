@@ -11,7 +11,7 @@
     --background: oklch(14.48% 0.005 250); /* Darkest, near-black */
 
     /* Surface colors for layering */
-    --surface-0: oklch(10% 0.005 250); /* Slightly lighter than background */
+    --surface-0: oklch(10% 0.005 250); /* Slightly slightly lighter than background */
     --surface-1: oklch(18% 0.005 250); /* Slightly lighter than background */
     --surface-2: oklch(24% 0.005 250); /* Mid-dark */
     --surface-3: oklch(32% 0.005 250); /* Even lighter */

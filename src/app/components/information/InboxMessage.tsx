@@ -31,24 +31,22 @@ function SidebarLink({
   }, []);
 }
 
-export function InboxMessage({ className }: { className?: string }) {
+export function InboxMessage({ className, title, content }: { className?: string, title: string, content: string }) {
   return (
     <div
       className={cn(
-        "bg-surface-1 border-surface-2 flex flex-col border-1 p-5 rounded mx-6 mt-6 min-h-8",
+        "bg-surface-1 border-surface-2 flex flex-col p-4 border-2 rounded hover:scale-[1.01] transition-all mx-6 mt-6 min-h-8",
         className,
       )}
       >
       <div className="flex flex-col space-y-3.5">
         {/* Title*/}
-        <div className="font-bold text-lg leading-none">
-            This goofy ah title
+        <div className="font-bold text-lg leading-none underline">
+            {title}
         </div>
         {/* Content*/}
-        <p className="text-sm text-text-secondary mx-2 text-muted-foreground">
-            Has a message: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec purus nec nunc. LOLLOLLLOLOL.
-            <br/>There is another line here
-            <br/>And what do you know! Here is the final line.
+        <p className="text-sm text-text-secondary mx-1 text-muted-foreground">
+            {content}
         </p>
       </div>
     </div>

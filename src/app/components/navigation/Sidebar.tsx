@@ -13,6 +13,7 @@ import {
   Users,
   Layers,
   Cog,
+  MessagesSquare,
   SlidersVertical,
   ChevronsLeft,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const iconMap: { [key: string]: React.ElementType } = {
   inbox: Inbox,
   listTodo: ListTodo,
   calendar: Calendar,
+  messagesSquare: MessagesSquare,
   layers: Layers,
   users: Users,
   cog: Cog,
@@ -58,7 +60,7 @@ function SidebarLink({
   const IconComponent = icon ? iconMap[icon] : null;
   return (
     <a
-      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm transition-all ${pathname == path ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}`}
+      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm transition-all ${pathname.startsWith(path) ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}`}
       href={`/app${path}`}
     >
       {IconComponent && (

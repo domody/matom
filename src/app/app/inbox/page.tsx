@@ -7,11 +7,10 @@ export default function Docs() {
         <h3 className="font-medium">Inbox</h3>
       </div>
       <div className="h-full">
-      <InboxMessage></InboxMessage>
-      <InboxMessage></InboxMessage>
-      <InboxMessage></InboxMessage>
-      <InboxMessage></InboxMessage>
-      <InboxMessage></InboxMessage></div>
+      <InboxMessage title="New message from THE BOSS" content="You better pick up the phone for daddy..." className="border-surface-3 border-l-accent bg-surface-2"/>
+      <InboxMessage title="New task assigned to you" content="Click to view, assigned for 14th Feb."/>
+      <InboxMessage title="My balls" content="they are sticky"/>
+      </div>
       <div className="flex w-full flex-col p-4"></div>
     </div>
   );
