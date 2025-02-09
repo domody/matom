@@ -1,8 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
-import { TaskItem, TaskItemProps } from "@/app/components/information/TaskItem";
 import { faker } from "@faker-js/faker";
+import { TaskItem, TaskItemProps } from "@/app/components/information/TaskItem";
 import { renderMarkdown } from "@/app/utils/types/renderMarkdown";
+import { ListFilter } from "lucide-react";
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@/app/components/information/Dropdown";
+import {
+  FiltersDropdown,
+  FiltersDropdownItem,
+  FiltersDropdownOption,
+} from "@/app/components/information/FiltersDropdown";
 
 const fakeTasks = Array.from({ length: 20 }).map((_, index) => {
   const task: TaskItemProps = {
@@ -39,6 +50,16 @@ const fakeTasks = Array.from({ length: 20 }).map((_, index) => {
   return task;
 });
 
+/*
+Feature by:
+tag
+priority
+status
+team
+last updated
+due date
+*/
+
 export default function Tasks() {
   const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
@@ -58,15 +79,83 @@ export default function Tasks() {
 
     fetchRenderedMarkdown();
   }, [taskSelected]);
+
   return (
-    <div className="flex h-full w-[calc(100%-16rem)] flex-col overflow-x-hidden">
-      <div className="border-border-muted flex h-14 w-full items-center border-b px-4">
+    <div className="flex h-full w-full flex-col overflow-x-hidden">
+      <div className="border-border-muted flex h-14 w-full shrink-0 items-center border-b px-4">
         <h3 className="font-medium">Tasks</h3>
       </div>
       <div className="flex h-full w-full">
         <div
           className={`flex shrink-0 flex-col transition-all ${taskSelected ? "w-1/2" : "w-full"}`}
         >
+          <div className="bg-surface-1 border-border-muted flex h-9 w-full items-center justify-start border-b px-4 py-1">
+            <Dropdown className="flex h-full items-center">
+              <DropdownTrigger>
+                <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
+                  <ListFilter size={16} className="stroke-text-secondary" />
+                  <p className="text-text-muted text-sm">Filters</p>
+                </div>
+              </DropdownTrigger>
+              <DropdownMenu position="left">
+                <div className="border-border bg-surface-1 text-text-secondary flex w-64 flex-col items-start justify-start rounded border py-2">
+                  <div className="mb-2 px-4">
+                    <p className="text-text-primary text-lg">Filters</p>
+                  </div>
+                  <div className="flex w-full flex-col text-sm">
+                    <FiltersDropdown>
+                      <FiltersDropdownItem title="Tags">
+                        <FiltersDropdownOption option="Bug" />
+                        <FiltersDropdownOption option="Feature" />
+                        <FiltersDropdownOption option="Enhancement" />
+                        <FiltersDropdownOption option="Critical" />
+                        <FiltersDropdownOption option="Design" />
+                      </FiltersDropdownItem>
+
+                      <FiltersDropdownItem title="Priority">
+                        <FiltersDropdownOption option="Low" />
+                        <FiltersDropdownOption option="Medium" />
+                        <FiltersDropdownOption option="High" />
+                        <FiltersDropdownOption option="Critical" />
+                      </FiltersDropdownItem>
+
+                      <FiltersDropdownItem title="Status">
+                        <FiltersDropdownOption option="Pending" />
+                        <FiltersDropdownOption option="In Progress" />
+                        <FiltersDropdownOption option="In Review" />
+                        <FiltersDropdownOption option="Completed" />
+                        <FiltersDropdownOption option="Blocked" />
+                      </FiltersDropdownItem>
+
+                      <FiltersDropdownItem title="Assignees">
+                        <FiltersDropdownOption option="Alice" />
+                        <FiltersDropdownOption option="Bob" />
+                        <FiltersDropdownOption option="Charlie" />
+                        <FiltersDropdownOption option="Dave" />
+                        <FiltersDropdownOption option="Eve" />
+                      </FiltersDropdownItem>
+
+                      <FiltersDropdownItem title="Due Date">
+                        <FiltersDropdownOption option="Today" />
+                        <FiltersDropdownOption option="This Week" />
+                        <FiltersDropdownOption option="This Month" />
+                        <FiltersDropdownOption option="Overdue" />
+                        <FiltersDropdownOption option="Custom Range..." />
+                      </FiltersDropdownItem>
+
+                      <FiltersDropdownItem title="Last Updated">
+                        <FiltersDropdownOption option="Last 24 Hours" />
+                        <FiltersDropdownOption option="Last 7 Days" />
+                        <FiltersDropdownOption option="Last 30 Days" />
+                        <FiltersDropdownOption option="Last 6 Months" />
+                        <FiltersDropdownOption option="Custom Range..." />
+                      </FiltersDropdownItem>
+                    </FiltersDropdown>
+                  </div>
+                </div>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
           {fakeTasks.map((task, index) => (
             <TaskItem
               task={task}
@@ -85,7 +174,7 @@ export default function Tasks() {
               </h2>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4 flex flex-col space-y-2 [&>p]:text-text-secondary [&>h3]:mt-4"
+                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
