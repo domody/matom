@@ -14,7 +14,8 @@ import {
   CalendarDays,
   Users,
   Tags,
-  NotepadText,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import {
   Dropdown,
@@ -74,6 +75,7 @@ due date
 
 export default function Tasks() {
   const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
+  const [taskMaximised, setTaskMaximised] = useState<boolean>(false);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -95,7 +97,7 @@ export default function Tasks() {
   return (
     <>
       <div
-        className={`flex h-full flex-col overflow-x-hidden transition-all ${taskSelected ? "w-1/2" : "w-full"}`}
+        className={`flex h-full flex-col overflow-x-hidden overflow-hidden transition-all ${taskSelected ? taskMaximised ? "w-0" : "w-2/3" : "w-full"}`}
       >
         <div className="border-border-muted flex h-14 w-full shrink-0 items-center border-b px-4">
           <h3 className="font-medium">Tasks</h3>
@@ -189,21 +191,26 @@ export default function Tasks() {
         </div>
       </div>
       <div
-        className={`border-border-muted flex h-full shrink-0 flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? "w-1/2" : "w-0"}`}
+        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? taskMaximised ? "w-full border-l-0" : "w-1/3" : "w-0"}`}
       >
         {taskSelected ? (
           <>
             <div className="border-border-muted flex h-14 w-full items-center justify-between border-b px-4">
-              <div className=""></div>
+              <div className="flex h-full items-center justify-start">
+              <div
+                    className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
+                    onClick={() => setTaskMaximised(!taskMaximised)}
+                  >
+                    <Maximize2 size={16} />
+                  </div>
+              </div>
               <div className="flex h-full items-center justify-end">
-                <div className="">
                   <div
-                    className="hover:bg-surface-1 cursor-pointer rounded p-1"
+                    className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
                     onClick={() => setTaskSelected(null)}
                   >
                     <X size={16} />
                   </div>
-                </div>
               </div>
             </div>
             <div className="flex flex-col p-6">
