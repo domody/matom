@@ -100,12 +100,13 @@ export interface TaskProps {
 
 interface TaskItemProps {
   task: TaskProps;
-  setTaskSelected: Dispatch<SetStateAction<TaskItemProps | null>>;
+  handleTaskClick: () => void;
+  setSelectedTask: Dispatch<SetStateAction<TaskItemProps | null>>;
   setTaskVisible: Dispatch<SetStateAction<boolean>>;
   isSelected: boolean;
 }
 
-export function TaskItem({ task, setTaskSelected, setTaskVisible, isSelected }: TaskItemProps) {
+export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisible, isSelected }: TaskItemProps) {
   const PriorityIconComponent = task.priority
     ? priorityIconMap[task.priority]
     : null;
@@ -113,10 +114,11 @@ export function TaskItem({ task, setTaskSelected, setTaskVisible, isSelected }: 
   return (
     <div
       className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
-      onClick={() => {
-        setTaskSelected(task); 
-        setTaskVisible(true)
-      }}
+      // onClick={() => {
+      //   setSelectedTask(task); 
+      //   setTaskVisible(true)
+      // }}
+      onClick={() => handleTaskClick(task)}
     >
       <div
         className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass(task.priority)}`}
