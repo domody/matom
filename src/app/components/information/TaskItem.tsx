@@ -100,7 +100,7 @@ export interface TaskProps {
 
 interface TaskItemProps {
   task: TaskProps;
-  handleTaskClick: () => void;
+  handleTaskClick: (task: TaskProps) => void;
   setSelectedTask: Dispatch<SetStateAction<TaskItemProps | null>>;
   setTaskVisible: Dispatch<SetStateAction<boolean>>;
   isSelected: boolean;
@@ -114,10 +114,6 @@ export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisibl
   return (
     <div
       className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
-      // onClick={() => {
-      //   setSelectedTask(task); 
-      //   setTaskVisible(true)
-      // }}
       onClick={() => handleTaskClick(task)}
     >
       <div

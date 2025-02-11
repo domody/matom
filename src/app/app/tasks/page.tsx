@@ -21,6 +21,7 @@ import {
   Maximize2,
   Minimize2,
   SquarePen,
+  Share2,
 } from "lucide-react";
 import {
   Dropdown,
@@ -97,11 +98,11 @@ export default function Tasks() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const taskId = searchParams.get('tk');
+    const taskId = searchParams.get("tk");
     if (taskId) {
-      const task = fakeTasks.find(t => t.uuid === taskId);
+      const task = fakeTasks.find((t) => t.uuid === taskId);
       if (task) {
-        setTaskVisible(true)
+        setTaskVisible(true);
         setSelectedTask(task);
       }
     }
@@ -109,9 +110,9 @@ export default function Tasks() {
 
   const handleTaskClick = (task: TaskProps) => {
     setSelectedTask(task);
-    setTaskVisible(true)
+    setTaskVisible(true);
     const newUrl = `${pathname}?tk=${task.uuid}`;
-    console.log(newUrl)
+    console.log(newUrl);
     router.push(newUrl, { scroll: false });
   };
 
@@ -247,7 +248,7 @@ export default function Tasks() {
             <div className="border-border-muted flex h-14 w-full items-center justify-between border-b px-4">
               <div className="flex h-full items-center justify-start">
                 <div
-                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1 transition-all"
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all"
                   onClick={() => setTaskMaximised(!taskMaximised)}
                 >
                   {taskMaximised ? (
@@ -257,9 +258,38 @@ export default function Tasks() {
                   )}
                 </div>
               </div>
-              <div className="flex h-full items-center justify-end">
+              <div className="flex h-full items-center justify-end space-x-1">
+                <div className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all">
+                  <SquarePen size={16} />
+                </div>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <div className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all">
+                      <Share2 size={16} />
+                    </div>
+                  </DropdownTrigger>
+                  <DropdownMenu position="right">
+                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border p-4 shadow-lg">
+                      <p className="font-medium">Share Task</p>
+                      <p className="text-text-muted mt-2 mb-0.5 text-sm">
+                        Copy Link UNFINSHED DONT LEAVE IT LLIKE THIS
+                      </p>
+                      <div
+                        className="bg-surface-2 group scrollbar-hide max-w-96 cursor-pointer overflow-x-scroll rounded p-2 text-nowrap"
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${pathname}?tk=${selectedTask.uuid}`);
+                        }}
+                      >
+                        <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
+                          ${pathname}?tk=${selectedTask.uuid}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenu>
+                </Dropdown>
+
                 <div
-                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1 transition-all"
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all"
                   onClick={() => {
                     setTaskMaximised(false);
                     setTaskVisible(false);
