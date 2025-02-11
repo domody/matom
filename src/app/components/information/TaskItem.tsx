@@ -119,9 +119,11 @@ export interface TaskItemProps {
 export function TaskItem({
   task,
   setTaskSelected,
+  setTaskVisible,
 }: {
   task: TaskItemProps;
   setTaskSelected: Dispatch<SetStateAction<TaskItemProps | null>>;
+  setTaskVisible: Dispatch<SetStateAction<boolean>>;
 }) {
   const priorityIconStyleClass = {
     Low: "stroke-text-muted",
@@ -161,7 +163,10 @@ export function TaskItem({
   return (
     <div
       className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
-      onClick={() => setTaskSelected(task)}
+      onClick={() => {
+        setTaskSelected(task); 
+        setTaskVisible(true)
+      }}
     >
       <div
         className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass}`}

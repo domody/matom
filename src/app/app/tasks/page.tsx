@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
+import useEscapeKey from "@/app/hooks/useEscapeKey";
 import { faker } from "@faker-js/faker";
 import {
   TaskInfo,
   TaskItem,
   TaskItemProps,
 } from "@/app/components/information/TaskItem";
-import { renderMarkdown } from "@/app/utils/types/renderMarkdown";
+import { renderMarkdown } from "@/app/utils/helpers/renderMarkdown";
 import {
   ListFilter,
   X,
@@ -75,6 +76,7 @@ due date
 
 export default function Tasks() {
   const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
+  const [taskVisible, setTaskVisible] = useState<boolean>(false)
   const [taskMaximised, setTaskMaximised] = useState<boolean>(false);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
 
@@ -94,10 +96,16 @@ export default function Tasks() {
     fetchRenderedMarkdown();
   }, [taskSelected]);
 
+  useEscapeKey(() => {
+    if (taskSelected) {
+      setTaskVisible(false)      
+      setTaskMaximised(false)
+    }
+  })
   return (
     <>
       <div
-        className={`flex h-full flex-col overflow-x-hidden overflow-hidden transition-all ${taskSelected ? taskMaximised ? "w-0" : "w-2/3" : "w-full"}`}
+        className={`flex h-full flex-col overflow-x-hidden overflow-hidden transition-all ${taskVisible ? taskMaximised ? "w-0" : "w-2/3" : "w-full"}`}
       >
         <div className="border-border-muted flex h-14 w-full shrink-0 items-center border-b px-4">
           <h3 className="font-medium">Tasks</h3>
@@ -184,6 +192,7 @@ export default function Tasks() {
               <TaskItem
                 task={task}
                 setTaskSelected={setTaskSelected}
+                setTaskVisible={setTaskVisible}
                 key={task.uuid} // Use UUID as a unique key
               />
             ))}
@@ -191,23 +200,32 @@ export default function Tasks() {
         </div>
       </div>
       <div
-        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? taskMaximised ? "w-full border-l-0" : "w-1/3" : "w-0"}`}
+        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskVisible ? taskMaximised ? "w-full border-l-0" : "w-1/3" : "w-0"}`}
       >
         {taskSelected ? (
-          <>
+          <div className="flex flex-col justify-start items-start shrink-0">
             <div className="border-border-muted flex h-14 w-full items-center justify-between border-b px-4">
               <div className="flex h-full items-center justify-start">
               <div
                     className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
                     onClick={() => setTaskMaximised(!taskMaximised)}
                   >
-                    <Maximize2 size={16} />
+                    {
+                      taskMaximised ? 
+                        <Minimize2 size={16} />
+                      :
+                        <Maximize2 size={16} />
+                    }
+                    
                   </div>
               </div>
               <div className="flex h-full items-center justify-end">
                   <div
                     className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
-                    onClick={() => setTaskSelected(null)}
+                    onClick={() => {
+                      setTaskMaximised(false)
+                      setTaskVisible(false)
+                    }}
                   >
                     <X size={16} />
                   </div>
@@ -242,7 +260,7 @@ export default function Tasks() {
                 <p>No body for this task.</p>
               )}
             </div>
-          </>
+          </div>
         ) : (
           <p>Loading</p>
         )}
