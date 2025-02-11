@@ -299,7 +299,7 @@ export default function Tasks() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-6">
+            <div className="flex flex-col p-6 w-full">
               <h2 className="text-text-primary mb-4">{selectedTask?.title}</h2>
               <div className="text-text-secondary mb-8 flex flex-col space-y-2">
                 <TaskInfo
@@ -425,7 +425,7 @@ export default function Tasks() {
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
+                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4 w-full"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
