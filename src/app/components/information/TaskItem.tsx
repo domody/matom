@@ -101,18 +101,22 @@ export interface TaskProps {
 interface TaskItemProps {
   task: TaskProps;
   setTaskSelected: Dispatch<SetStateAction<TaskItemProps | null>>;
+  setTaskVisible: Dispatch<SetStateAction<boolean>>;
   isSelected: boolean;
 }
 
-export function TaskItem({ task, setTaskSelected, isSelected }: TaskItemProps) {
+export function TaskItem({ task, setTaskSelected, setTaskVisible, isSelected }: TaskItemProps) {
   const PriorityIconComponent = task.priority
     ? priorityIconMap[task.priority]
     : null;
   const StatusIconComponent = task.status ? statusIconMap[task.status] : null;
   return (
     <div
-      className={`hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all ${isSelected ? "bg-surface-1" : ""}`}
-      onClick={() => setTaskSelected(task)}
+      className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
+      onClick={() => {
+        setTaskSelected(task); 
+        setTaskVisible(true)
+      }}
     >
       <div
         className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass(task.priority)}`}
