@@ -269,20 +269,27 @@ export default function Tasks() {
                     </div>
                   </DropdownTrigger>
                   <DropdownMenu position="right">
-                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border p-4 shadow-lg">
-                      <p className="font-medium">Share Task</p>
-                      <p className="text-text-muted mt-2 mb-0.5 text-sm">
-                        Copy Link UNFINSHED DONT LEAVE IT LLIKE THIS
-                      </p>
-                      <div
-                        className="bg-surface-2 group scrollbar-hide max-w-96 cursor-pointer overflow-x-scroll rounded p-2 text-nowrap"
-                        onClick={() => {
-                          navigator.clipboard.writeText(`${pathname}?tk=${selectedTask.uuid}`);
-                        }}
-                      >
-                        <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
-                          ${pathname}?tk=${selectedTask.uuid}
+                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border py-4 shadow-lg">
+                      <div className="mb-2 w-full px-4">
+                        <p className="text-text-primary font-medium">Filters</p>
+                        <hr className="border-border mt-2" />
+                      </div>
+                      <div className="flex flex-col px-4">
+                        <p className="text-text-muted mt-2 mb-0.5 text-sm">
+                          Copy Link UNFINSHED DONT LEAVE IT LLIKE THIS
                         </p>
+                        <div
+                          className="bg-surface-2 group scrollbar-hide max-w-96 cursor-pointer overflow-x-scroll rounded p-2 text-nowrap"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${pathname}?tk=${selectedTask.uuid}`,
+                            );
+                          }}
+                        >
+                          <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
+                            ${pathname}?tk=${selectedTask.uuid}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </DropdownMenu>
@@ -299,7 +306,7 @@ export default function Tasks() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-6 w-full">
+            <div className="flex w-full flex-col p-6">
               <h2 className="text-text-primary mb-4">{selectedTask?.title}</h2>
               <div className="text-text-secondary mb-8 flex flex-col space-y-2">
                 <TaskInfo
@@ -425,7 +432,7 @@ export default function Tasks() {
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4 w-full"
+                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex w-full flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
