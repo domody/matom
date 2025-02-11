@@ -2,6 +2,14 @@ import { cn } from "@/app/utils/cn";
 import { Ellipsis } from "lucide-react";
 import * as React from "react";
 import { Dispatch, SetStateAction } from "react";
+import {
+  statusIconMap,
+  statusIconStyleClass,
+  statusBackgroundStyleClass,
+  priorityIconMap,
+  priorityIconStyleClass,
+  priorityBackgroundStyleClass,
+} from "@/app/utils/types/getIconFromString";
 /*
 Pass: 
  - Team
@@ -12,32 +20,6 @@ Pass:
  - Start & End date
  - Assigned users
 */
-// Priority Icons
-import { AlertOctagon, ChevronUp, Equal, ChevronDown } from "lucide-react";
-
-const priorityIconMap: { [key: string]: React.ElementType } = {
-  Low: ChevronDown,
-  Medium: Equal,
-  High: ChevronUp,
-  Critical: AlertOctagon,
-};
-
-// Status Icons
-import {
-  CircleDashed,
-  Clock,
-  CircleCheck,
-  CircleDotDashed,
-  CircleMinus,
-} from "lucide-react";
-
-const statusIconMap: { [key: string]: React.ElementType } = {
-  Pending: CircleDashed,
-  InProgress: Clock,
-  InReview: CircleDotDashed,
-  Completed: CircleCheck,
-  Blocked: CircleMinus,
-};
 
 export function TaskItemTagWrapper({
   children,
@@ -98,7 +80,7 @@ export function TaskItemTag({ tag }: { tag: string }) {
   );
 }
 
-export interface TaskItemProps {
+export interface TaskProps {
   uuid: string;
   team: string;
   id: number;
@@ -116,60 +98,29 @@ export interface TaskItemProps {
   lastUpdated: string;
 }
 
-export function TaskItem({
-  task,
-  setTaskSelected,
-}: {
-  task: TaskItemProps;
+interface TaskItemProps {
+  task: TaskProps;
   setTaskSelected: Dispatch<SetStateAction<TaskItemProps | null>>;
-}) {
-  const priorityIconStyleClass = {
-    Low: "stroke-text-muted",
-    Medium: "stroke-text-muted",
-    High: "stroke-text-muted",
-    Critical: "stroke-red-500",
-  }[task.priority];
+  isSelected: boolean;
+}
 
-  const priorityBackgroundStyleClass = {
-    Low: "hover:bg-surface-2 ",
-    Medium: "hover:bg-surface-2 ",
-    High: "shover:bg-surface-2 ",
-    Critical: "hover:bg-red-400/20",
-  }[task.priority];
-
+export function TaskItem({ task, setTaskSelected, isSelected }: TaskItemProps) {
   const PriorityIconComponent = task.priority
     ? priorityIconMap[task.priority]
     : null;
-
-  const statusIconStyleClass = {
-    Pending: "stroke-text-muted",
-    InProgress: "stroke-orange-400",
-    InReview: "stroke-blue-400",
-    Completed: "stroke-green-400",
-    Blocked: "stroke-red-500",
-  }[task.status];
-
-  const statusBackgroundStyleClass = {
-    Pending: "bg-surface-1 hover:bg-surface-2",
-    InProgress: "bg-orange-400/5 hover:bg-orange-400/15",
-    InReview: "bg-blue-400/5 hover:bg-blue-400/15",
-    Completed: "bg-green-400/5 hover:bg-green-400/15",
-    Blocked: "bg-red-400/10 hover:bg-red-400/20",
-  }[task.status];
-
   const StatusIconComponent = task.status ? statusIconMap[task.status] : null;
   return (
     <div
-      className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
+      className={`hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all ${isSelected ? "bg-surface-1" : ""}`}
       onClick={() => setTaskSelected(task)}
     >
       <div
-        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass}`}
+        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass(task.priority)}`}
       >
         {PriorityIconComponent && (
           <PriorityIconComponent
             size={16}
-            className={`${priorityIconStyleClass}`}
+            className={`${priorityIconStyleClass(task.priority)}`}
           />
         )}
       </div>
@@ -177,12 +128,12 @@ export function TaskItem({
         {task.team.slice(0, 3).toUpperCase()}-{task.id}
       </p>
       <div
-        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${statusBackgroundStyleClass}`}
+        className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${statusBackgroundStyleClass(task.status)}`}
       >
         {StatusIconComponent && (
           <StatusIconComponent
             size={16}
-            className={`${statusIconStyleClass}`}
+            className={`${statusIconStyleClass(task.status)}`}
           />
         )}
       </div>
@@ -192,10 +143,10 @@ export function TaskItem({
           <TaskItemTag tag={tag} key={index} />
         ))}
       </TaskItemTagWrapper>
-      <p className="srhink-0 text-text-muted text-nowrap">
+      <p className="srhink-0 text-text-muted w-20 text-left text-nowrap">
         {getDateString(task.lastUpdated)}
       </p>
-      <p className="srhink-0 text-text-muted text-nowrap">
+      <p className="srhink-0 text-text-muted w-20 text-left text-nowrap">
         {getDateString(task.endDate)}
       </p>
       <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
@@ -210,7 +161,7 @@ import { LucideIcon } from "lucide-react";
 interface TaskInfoProps {
   icon: LucideIcon;
   info: string;
-  data: string | string[];
+  data: React.ReactNode;
 }
 
 export function TaskInfo({ icon: Icon, info, data }: TaskInfoProps) {
@@ -220,9 +171,7 @@ export function TaskInfo({ icon: Icon, info, data }: TaskInfoProps) {
         <Icon size={16} className="stroke-text-muted" />
         <p>{info}</p>
       </div>
-      <div>
-        {Array.isArray(data) ? <p>{data.join(", ")}</p> : <p>{data}</p>}
-      </div>
+      <div>{data}</div>
     </div>
   );
 }

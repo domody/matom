@@ -1,21 +1,24 @@
 "use client";
+import * as React from "react";
 import { useState, useEffect } from "react";
 import { faker } from "@faker-js/faker";
 import {
   TaskInfo,
   TaskItem,
-  TaskItemProps,
+  TaskProps,
 } from "@/app/components/information/TaskItem";
 import { renderMarkdown } from "@/app/utils/types/renderMarkdown";
 import {
   ListFilter,
   X,
   CircleDot,
+  CircleFadingArrowUp,
   CalendarDays,
   Users,
   Tags,
   Maximize2,
   Minimize2,
+  SquarePen
 } from "lucide-react";
 import {
   Dropdown,
@@ -27,9 +30,17 @@ import {
   FiltersDropdownItem,
   FiltersDropdownOption,
 } from "@/app/components/information/FiltersDropdown";
+import {
+  statusIconMap,
+  statusIconStyleClass,
+  statusBackgroundStyleClass,
+  priorityIconMap,
+  priorityIconStyleClass,
+  priorityBackgroundStyleClass,
+} from "@/app/utils/types/getIconFromString";
 
-const fakeTasks = Array.from({ length: 20 }).map((_, index) => {
-  const task: TaskItemProps = {
+const fakeTasks = Array.from({ length: 45 }).map((_, index) => {
+  const task: TaskProps = {
     uuid: faker.string.uuid(), // Generates a unique UUID
     team: faker.company.name(), // Random team name
     id: faker.number.int({ min: 100, max: 999 }), // Short task ID (e.g., 304)
@@ -74,7 +85,7 @@ due date
 */
 
 export default function Tasks() {
-  const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
+  const [taskSelected, setTaskSelected] = useState<TaskProps | null>(null);
   const [taskMaximised, setTaskMaximised] = useState<boolean>(false);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
 
@@ -97,14 +108,14 @@ export default function Tasks() {
   return (
     <>
       <div
-        className={`flex h-full flex-col overflow-x-hidden overflow-hidden transition-all ${taskSelected ? taskMaximised ? "w-0" : "w-2/3" : "w-full"}`}
+        className={`flex h-full flex-col overflow-hidden overflow-x-hidden transition-all ${taskSelected ? (taskMaximised ? "w-0" : "w-2/3") : "w-full"}`}
       >
         <div className="border-border-muted flex h-14 w-full shrink-0 items-center border-b px-4">
           <h3 className="font-medium">Tasks</h3>
         </div>
         <div className="flex h-full w-full">
-          <div className="flex w-full shrink-0 flex-col transition-all">
-            <div className="bg-surface-1 border-border-muted flex h-9 w-full items-center justify-start border-b px-4 py-1">
+          <div className="scrollbar-hide flex w-full shrink-0 flex-col overflow-y-auto pb-36 transition-all">
+            <div className="bg-surface-1 border-border-muted flex shrink-0 h-9 w-full items-center justify-start border-b px-4 py-1">
               <Dropdown className="flex h-full items-center">
                 <DropdownTrigger>
                   <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
@@ -184,6 +195,9 @@ export default function Tasks() {
               <TaskItem
                 task={task}
                 setTaskSelected={setTaskSelected}
+                isSelected={
+                  taskSelected ? task.uuid == taskSelected.uuid : false
+                }
                 key={task.uuid} // Use UUID as a unique key
               />
             ))}
@@ -191,26 +205,32 @@ export default function Tasks() {
         </div>
       </div>
       <div
-        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? taskMaximised ? "w-full border-l-0" : "w-1/3" : "w-0"}`}
+        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? (taskMaximised ? "w-full border-l-0" : "w-1/3") : "w-0"}`}
       >
         {taskSelected ? (
           <>
             <div className="border-border-muted flex h-14 w-full items-center justify-between border-b px-4">
               <div className="flex h-full items-center justify-start">
-              <div
-                    className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
-                    onClick={() => setTaskMaximised(!taskMaximised)}
-                  >
-                    <Maximize2 size={16} />
-                  </div>
+                <div
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1 transition-all"
+                  onClick={() => setTaskMaximised(!taskMaximised)}
+                >
+                  <Maximize2 size={16} />
+                </div>
               </div>
-              <div className="flex h-full items-center justify-end">
-                  <div
-                    className="hover:bg-surface-1 transition-all text-text-muted hover:text-text-secondary cursor-pointer rounded p-1"
-                    onClick={() => setTaskSelected(null)}
-                  >
-                    <X size={16} />
-                  </div>
+              <div className="flex h-full items-center justify-end space-x-1">
+                <div
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1 transition-all"
+                  onClick={() => setTaskSelected(null)}
+                >
+                  <SquarePen size={16} />
+                </div>
+                <div
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1 transition-all"
+                  onClick={() => setTaskSelected(null)}
+                >
+                  <X size={16} />
+                </div>
               </div>
             </div>
             <div className="flex flex-col p-6">
@@ -219,19 +239,123 @@ export default function Tasks() {
                 <TaskInfo
                   icon={CircleDot}
                   info="Status"
-                  data={taskSelected.status.replace(/([A-Z])/g, " $1").trim()}
+                  data={
+                    <div className="flex items-center justify-start gap-x-2">
+                      <div
+                        className={`cursor-pointer rounded p-[0.334rem] ${statusBackgroundStyleClass(taskSelected.status)}`}
+                      >
+                        {React.createElement(
+                          statusIconMap[taskSelected.status],
+                          {
+                            size: 16,
+                            className: statusIconStyleClass(
+                              taskSelected.status,
+                            ),
+                          },
+                        )}
+                      </div>
+                      <p>
+                        {taskSelected.status.replace(/([A-Z])/g, " $1").trim()}
+                      </p>
+                    </div>
+                  }
+                />
+                <TaskInfo
+                  icon={CircleFadingArrowUp}
+                  info="Priority"
+                  data={
+                    <div className="flex items-center justify-start gap-x-2">
+                      <div
+                        className={`cursor-pointer rounded p-[0.334rem] ${priorityBackgroundStyleClass(taskSelected.priority)}`}
+                      >
+                        {React.createElement(
+                          priorityIconMap[taskSelected.priority],
+                          {
+                            size: 16,
+                            className: priorityIconStyleClass(
+                              taskSelected.priority,
+                            ),
+                          },
+                        )}
+                      </div>
+                      <p>
+                        {taskSelected.priority
+                          .replace(/([A-Z])/g, " $1")
+                          .trim()}
+                      </p>
+                    </div>
+                  }
                 />
                 <TaskInfo
                   icon={CalendarDays}
                   info="Due Date"
-                  data={taskSelected.endDate}
+                  data={<p>{taskSelected.endDate}</p>}
                 />
                 <TaskInfo
                   icon={Users}
                   info="Assignees"
-                  data={taskSelected.assignedUsers}
+                  data={
+                    <div className="flex flex-wrap items-center justify-start gap-x-2">
+                      {taskSelected.assignedUsers.map((user, index) => {
+                        const tailwindColors = [
+                          "bg-red-400/5 hover:bg-red-400/20",
+                          "bg-blue-400/5 hover:bg-blue-400/20",
+                          "bg-green-400/5 hover:bg-green-400/20",
+                          "bg-purple-400/5 hover:bg-purple-400/20",
+                          "bg-pink-400/5 hover:bg-pink-400/20",
+                          "bg-indigo-400/5 hover:bg-indigo-400/20",
+                        ];
+
+                        const randomColor =
+                          tailwindColors[
+                            Math.floor(Math.random() * tailwindColors.length)
+                          ];
+
+                        return (
+                          <div
+                            key={index}
+                            className={`flex cursor-pointer items-center justify-center rounded-full px-3 py-0.5 text-sm transition-all ${randomColor}`}
+                          >
+                            {user}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  }
                 />
-                <TaskInfo icon={Tags} info="Tags" data={taskSelected.tags} />
+
+                <TaskInfo
+                  icon={Tags}
+                  info="Tags"
+                  data={
+                    <div className="flex flex-wrap items-center justify-start gap-x-2">
+                      {taskSelected.tags.map((tag, index) => {
+                        const tailwindColors = [
+                          "bg-red-400/10 hover:bg-red-400/20 text-red-300",
+                          "bg-blue-400/10 hover:bg-blue-400/20 text-blue-300",
+                          "bg-green-400/10 hover:bg-green-400/20 text-green-300",
+                          "bg-purple-400/10 hover:bg-purple-400/20 text-purple-300",
+                          "bg-pink-400/10 hover:bg-pink-400/20 text-pink-300",
+                          "bg-indigo-400/10 hover:bg-indigo-400/20 text-indigo-300",
+                        ];
+
+                        const randomColor =
+                          tailwindColors[
+                            Math.floor(Math.random() * tailwindColors.length)
+                          ];
+
+                        return (
+                          <div
+                            key={index}
+                            className={`flex cursor-pointer items-center justify-center rounded px-2 py-0.5 text-sm transition-all ${randomColor}`}
+                          >
+                            {tag}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  }
+                />
               </div>
               {taskHtmlContent ? (
                 <div
