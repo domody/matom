@@ -9,7 +9,7 @@ import {
   priorityIconMap,
   priorityIconStyleClass,
   priorityBackgroundStyleClass,
-} from "@/app/utils/types/getIconFromString";
+} from "@/app/utils/helpers/getIconFromString";
 /*
 Pass: 
  - Team

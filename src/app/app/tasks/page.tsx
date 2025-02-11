@@ -38,7 +38,7 @@ import {
   priorityIconMap,
   priorityIconStyleClass,
   priorityBackgroundStyleClass,
-} from "@/app/utils/types/getIconFromString";
+} from "@/app/utils/helpers/getIconFromString";
 
 const fakeTasks = Array.from({ length: 45 }).map((_, index) => {
   const task: TaskProps = {
