@@ -1,20 +1,29 @@
 "use client";
+import * as React from "react";
 import { useState, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useEscapeKey from "@/app/hooks/useEscapeKey";
 import { faker } from "@faker-js/faker";
 import {
   TaskInfo,
   TaskItem,
-  TaskItemProps,
+  TaskProps,
 } from "@/app/components/information/TaskItem";
-import { renderMarkdown } from "@/app/utils/types/renderMarkdown";
+import { renderMarkdown } from "@/app/utils/helpers/renderMarkdown";
 import {
   ListFilter,
   X,
   CircleDot,
+  CircleFadingArrowUp,
   CalendarDays,
   Users,
   Tags,
-  NotepadText,
+  Maximize2,
+  Minimize2,
+  SquarePen,
+  Share2,
+  Copy,
+  Check
 } from "lucide-react";
 import {
   Dropdown,
@@ -26,10 +35,18 @@ import {
   FiltersDropdownItem,
   FiltersDropdownOption,
 } from "@/app/components/information/FiltersDropdown";
+import {
+  statusIconMap,
+  statusIconStyleClass,
+  statusBackgroundStyleClass,
+  priorityIconMap,
+  priorityIconStyleClass,
+  priorityBackgroundStyleClass,
+} from "@/app/utils/helpers/getIconFromString";
 
-const fakeTasks = Array.from({ length: 20 }).map((_, index) => {
-  const task: TaskItemProps = {
-    uuid: faker.string.uuid(), // Generates a unique UUID
+const fakeTasks = Array.from({ length: 45 }).map((_, index) => {
+  const task: TaskProps = {
+    uuid: index === 5 ? "helloworld" : faker.string.uuid(), // First task gets 'helloworld' UUID
     team: faker.company.name(), // Random team name
     id: faker.number.int({ min: 100, max: 999 }), // Short task ID (e.g., 304)
     status: faker.helpers.arrayElement([
@@ -73,15 +90,50 @@ due date
 */
 
 export default function Tasks() {
-  const [taskSelected, setTaskSelected] = useState<TaskItemProps | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
+  const [taskVisible, setTaskVisible] = useState<boolean>(false);
+  const [taskMaximised, setTaskMaximised] = useState<boolean>(false);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const taskId = searchParams.get("tk");
+    if (taskId) {
+      const task = fakeTasks.find((t) => t.uuid === taskId);
+      if (task) {
+        setTaskVisible(true);
+        setSelectedTask(task);
+      }
+      else {
+        router.replace(pathname, { scroll: false })
+      }
+    }
+
+  }, [searchParams, fakeTasks]);
+
+  const handleTaskClick = (task: TaskProps) => {
+    setSelectedTask(task);
+    setTaskVisible(true);
+    const newUrl = `${pathname}?tk=${task.uuid}`;
+    console.log(newUrl);
+    router.replace(newUrl, { scroll: false });
+  };
+
+  const closeTask = () => {
+    setTaskMaximised(false);
+    setTaskVisible(false);
+    router.replace(pathname, { scroll : false })
+    
+  }
   useEffect(() => {
     const fetchRenderedMarkdown = async () => {
-      if (!taskSelected?.body) return;
+      if (!selectedTask?.body) return;
 
       try {
-        const markdown = atob(taskSelected.body);
+        const markdown = atob(selectedTask.body);
         const res = await renderMarkdown(markdown);
         setTaskHtmlContent(res.contentHtml);
       } catch (err) {
@@ -90,19 +142,25 @@ export default function Tasks() {
     };
 
     fetchRenderedMarkdown();
-  }, [taskSelected]);
+  }, [selectedTask]);
+
+  useEscapeKey(() => {
+    if (selectedTask) {
+      closeTask()
+    }
+  });
 
   return (
     <>
       <div
-        className={`flex h-full flex-col overflow-x-hidden transition-all ${taskSelected ? "w-1/2" : "w-full"}`}
+        className={`flex h-full flex-col overflow-hidden overflow-x-hidden transition-all ${taskVisible ? (taskMaximised ? "w-0" : "w-2/3") : "w-full"}`}
       >
         <div className="border-border-muted flex h-14 w-full shrink-0 items-center border-b px-4">
           <h3 className="font-medium">Tasks</h3>
         </div>
         <div className="flex h-full w-full">
-          <div className="flex w-full shrink-0 flex-col transition-all">
-            <div className="bg-surface-1 border-border-muted flex h-9 w-full items-center justify-start border-b px-4 py-1">
+          <div className="scrollbar-hide flex w-full shrink-0 flex-col overflow-y-auto pb-36 transition-all">
+            <div className="bg-surface-1 border-border-muted flex h-9 w-full shrink-0 items-center justify-start border-b px-4 py-1 sticky top-0 left-0">
               <Dropdown className="flex h-full items-center">
                 <DropdownTrigger>
                   <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
@@ -181,7 +239,12 @@ export default function Tasks() {
             {fakeTasks.map((task, index) => (
               <TaskItem
                 task={task}
-                setTaskSelected={setTaskSelected}
+                handleTaskClick={handleTaskClick}
+                setSelectedTask={setSelectedTask}
+                isSelected={
+                  selectedTask ? task.uuid == selectedTask.uuid : false
+                }
+                setTaskVisible={setTaskVisible}
                 key={task.uuid} // Use UUID as a unique key
               />
             ))}
@@ -189,53 +252,207 @@ export default function Tasks() {
         </div>
       </div>
       <div
-        className={`border-border-muted flex h-full shrink-0 flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskSelected ? "w-1/2" : "w-0"}`}
+        className={`border-border-muted flex h-full flex-col overflow-hidden overflow-x-hidden border-l transition-all ${taskVisible ? (taskMaximised ? "w-full border-l-0" : "w-1/3") : "w-0"}`}
       >
-        {taskSelected ? (
-          <>
+        {selectedTask ? (
+          <div className="flex shrink-0 flex-col items-start justify-start">
             <div className="border-border-muted flex h-14 w-full items-center justify-between border-b px-4">
-              <div className=""></div>
-              <div className="flex h-full items-center justify-end">
-                <div className="">
-                  <div
-                    className="hover:bg-surface-1 cursor-pointer rounded p-1"
-                    onClick={() => setTaskSelected(null)}
-                  >
-                    <X size={16} />
-                  </div>
+              <div className="flex h-full items-center justify-start">
+                <div
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all"
+                  onClick={() => setTaskMaximised(!taskMaximised)}
+                >
+                  {taskMaximised ? (
+                    <Minimize2 size={16} />
+                  ) : (
+                    <Maximize2 size={16} />
+                  )}
+                </div>
+              </div>
+              <div className="flex h-full items-center justify-end space-x-1">
+                <div className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all">
+                  <SquarePen size={16} />
+                </div>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <div className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all">
+                      <Share2 size={16} />
+                    </div>
+                  </DropdownTrigger>
+                  <DropdownMenu position="right">
+                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border py-4 shadow-lg">
+                      <div className="mb-2 w-full px-4">
+                        <p className="text-text-primary font-medium">Share</p>
+                        <hr className="border-border mt-2" />
+                      </div>
+                      <div className="flex flex-col px-4">
+                        <p className="text-text-muted mt-2 mb-0.5 text-sm">
+                          Copy Link
+                        </p>
+                        <div
+                          className="group bg-surface-2 border border-border-muted relative group cursor-pointer rounded text-nowrap 
+                          after:absolute after:h-full after:w-30 after:bg-gradient-to-r after:to-75% after:from-primary/0 after:to-surface-2 after:top-0 after:right-0"
+                        
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              `${pathname}?tk=${selectedTask.uuid}`,
+                            );
+                          }}
+                        >
+                          <Copy size={16} className="absolute top-2.5 opacity-0 group-hover:opacity-100 right-2 z-10 transition-all stroke-text-secondary" />
+                          <div className="w-full h-full overflow-x-scroll max-w-[19rem] p-2 scrollbar-hide">
+                            <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
+                              ${pathname}?tk=${selectedTask.uuid}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </DropdownMenu>
+                </Dropdown>
+
+                <div
+                  className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all"
+                  onClick={() => closeTask()}
+                >
+                  <X size={16} />
                 </div>
               </div>
             </div>
-            <div className="flex flex-col p-6">
-              <h2 className="text-text-primary mb-4">{taskSelected?.title}</h2>
+            <div className="flex w-full flex-col p-6">
+              <h2 className="text-text-primary mb-4">{selectedTask?.title}</h2>
               <div className="text-text-secondary mb-8 flex flex-col space-y-2">
                 <TaskInfo
                   icon={CircleDot}
                   info="Status"
-                  data={taskSelected.status.replace(/([A-Z])/g, " $1").trim()}
+                  data={
+                    <div className="flex items-center justify-start gap-x-2">
+                      <div
+                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${statusBackgroundStyleClass(selectedTask.status)}`}
+                      >
+                        {React.createElement(
+                          statusIconMap[selectedTask.status],
+                          {
+                            size: 16,
+                            className: statusIconStyleClass(
+                              selectedTask.status,
+                            ),
+                          },
+                        )}
+                      </div>
+                      <p>
+                        {selectedTask.status.replace(/([A-Z])/g, " $1").trim()}
+                      </p>
+                    </div>
+                  }
+                />
+                <TaskInfo
+                  icon={CircleFadingArrowUp}
+                  info="Priority"
+                  data={
+                    <div className="flex items-center justify-start gap-x-2">
+                      <div
+                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${priorityBackgroundStyleClass(selectedTask.priority)}`}
+                      >
+                        {React.createElement(
+                          priorityIconMap[selectedTask.priority],
+                          {
+                            size: 16,
+                            className: priorityIconStyleClass(
+                              selectedTask.priority,
+                            ),
+                          },
+                        )}
+                      </div>
+                      <p>
+                        {selectedTask.priority
+                          .replace(/([A-Z])/g, " $1")
+                          .trim()}
+                      </p>
+                    </div>
+                  }
                 />
                 <TaskInfo
                   icon={CalendarDays}
                   info="Due Date"
-                  data={taskSelected.endDate}
+                  data={<p>{selectedTask.endDate}</p>}
                 />
                 <TaskInfo
                   icon={Users}
                   info="Assignees"
-                  data={taskSelected.assignedUsers}
+                  data={
+                    <div className="flex flex-wrap items-center justify-start gap-x-2">
+                      {selectedTask.assignedUsers.map((user, index) => {
+                        const tailwindColors = [
+                          "bg-red-400/5 hover:bg-red-400/20",
+                          "bg-blue-400/5 hover:bg-blue-400/20",
+                          "bg-green-400/5 hover:bg-green-400/20",
+                          "bg-purple-400/5 hover:bg-purple-400/20",
+                          "bg-pink-400/5 hover:bg-pink-400/20",
+                          "bg-indigo-400/5 hover:bg-indigo-400/20",
+                        ];
+
+                        const randomColor =
+                          tailwindColors[
+                            Math.floor(Math.random() * tailwindColors.length)
+                          ];
+
+                        return (
+                          <div
+                            key={index}
+                            className={`flex cursor-pointer items-center justify-center rounded-full px-3 py-0.5 text-sm transition-all ${randomColor}`}
+                          >
+                            {user}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  }
                 />
-                <TaskInfo icon={Tags} info="Tags" data={taskSelected.tags} />
+
+                <TaskInfo
+                  icon={Tags}
+                  info="Tags"
+                  data={
+                    <div className="flex flex-wrap items-center justify-start gap-x-2">
+                      {selectedTask.tags.map((tag, index) => {
+                        const tailwindColors = [
+                          "bg-red-400/10 hover:bg-red-400/20 text-red-300",
+                          "bg-blue-400/10 hover:bg-blue-400/20 text-blue-300",
+                          "bg-green-400/10 hover:bg-green-400/20 text-green-300",
+                          "bg-purple-400/10 hover:bg-purple-400/20 text-purple-300",
+                          "bg-pink-400/10 hover:bg-pink-400/20 text-pink-300",
+                          "bg-indigo-400/10 hover:bg-indigo-400/20 text-indigo-300",
+                        ];
+
+                        const randomColor =
+                          tailwindColors[
+                            Math.floor(Math.random() * tailwindColors.length)
+                          ];
+
+                        return (
+                          <div
+                            key={index}
+                            className={`flex cursor-pointer items-center justify-center rounded px-2 py-0.5 text-sm transition-all ${randomColor}`}
+                          >
+                            {tag}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  }
+                />
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
+                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex w-full flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
                 <p>No body for this task.</p>
               )}
             </div>
-          </>
+          </div>
         ) : (
           <p>Loading</p>
         )}

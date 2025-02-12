@@ -14,8 +14,8 @@ interface DropdownContextProps {
   closeMenu: () => void;
   toggleMenuOpen: () => void;
   onHover: boolean;
-  dropdownTriggerRef: React.RefObject<HTMLDivElement>;
-  dropdownRef: React.RefObject<HTMLDivElement>;
+  dropdownTriggerRef: React.RefObject<HTMLDivElement | null>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const DropdownContext = createContext<DropdownContextProps | null>(null);
@@ -81,7 +81,7 @@ function Dropdown({
   );
 }
 
-function DropdownTrigger({ children }: { children: React.ReactNode }) {
+function DropdownTrigger({ children, className }: { children: React.ReactNode; className?: string; }) {
   const context = useContext(DropdownContext);
   if (!context) throw new Error("DropdownTrigger must be used inside Dropdown");
 
@@ -91,10 +91,13 @@ function DropdownTrigger({ children }: { children: React.ReactNode }) {
   return (
     <div
       ref={dropdownTriggerRef}
-      onClick={onHover ? undefined : toggleMenuOpen}
+      onClick={onHover ? undefined : (e) => {
+        toggleMenuOpen();
+        e.stopPropagation();
+      }}
       onMouseEnter={onHover ? openMenu : undefined}
       onMouseLeave={onHover ? closeMenu : undefined}
-      className="h-full"
+      className={cn("h-full", className)}
     >
       {children}
     </div>
@@ -139,4 +142,18 @@ function DropdownMenu({
   );
 }
 
-export { Dropdown, DropdownMenu, DropdownTrigger };
+function DropdownItem({option}: {option: string}) {
+  const context = useContext(DropdownContext);
+  if (!context) throw new Error("DropdownItem must be used inside Dropdown");
+
+  const {closeMenu} = context
+
+  const handleClick = () => {
+    closeMenu()
+  }
+  
+  return (
+    <div className="w-full rounded-md py-1.5 px-2 hover:bg-surface-3/50 transition-all text-text-secondary hover:text-text-primary" onClick={() => handleClick()}>{option}</div>
+  )
+}
+export { Dropdown, DropdownMenu, DropdownTrigger, DropdownItem };
