@@ -107,7 +107,11 @@ export default function Tasks() {
         setTaskVisible(true);
         setSelectedTask(task);
       }
+      else {
+        router.replace(pathname, { scroll: false })
+      }
     }
+
   }, [searchParams, fakeTasks]);
 
   const handleTaskClick = (task: TaskProps) => {

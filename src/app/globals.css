@@ -17,8 +17,8 @@
     --surface-3: oklch(32% 0.005 250); /* Even lighter */
 
     /* Borders and subtle dividers */
-    --border: oklch(30% 0.01 0);
-    --border-muted: oklch(25% 0.005 0);
+    --border: oklch(30% 0.01 250);
+    --border-muted: oklch(25% 0.005 250);
 
     /* Primary accent (interactive elements, buttons, links) */
     --accent: oklch(70% 0.2 265); /* Vibrant purple */
@@ -39,6 +39,9 @@
     --success: oklch(65% 0.2 150); /* Green */
     --warning: oklch(75% 0.2 80); /* Yellow-orange */
     --error: oklch(65% 0.22 20); /* Red */
+
+    /* Rounded */
+    --radius: 0.375rem;
   }
 }
 
@@ -75,6 +78,11 @@
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
+
+  /* Rounding */
+  --radius: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
   /* Animation easings */
   --ease-fluid: cubic-bezier(0.3, 0, 0, 1);

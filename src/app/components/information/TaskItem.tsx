@@ -13,7 +13,8 @@ import {
 import { 
   Dropdown, 
   DropdownMenu, 
-  DropdownTrigger 
+  DropdownTrigger,
+  DropdownItem,
 } from "@/app/components/information/Dropdown";
 /*
 Pass: 
@@ -79,7 +80,7 @@ function getDateString(date: string, yearIncl: boolean = false) {
 
 export function TaskItemTag({ tag }: { tag: string }) {
   return (
-    <div className="border-border bg-primary text-text-secondary hover:bg-surface-2 hover:text-text-primary cursor-pointer rounded-full border px-2 py-1 text-xs text-nowrap transition-all">
+    <div className="border-border bg-primary text-text-muted hover:bg-surface-2 hover:text-text-secondary cursor-pointer rounded-full border px-2 py-1 text-xs text-nowrap transition-all">
       {tag}
     </div>
   );
@@ -163,7 +164,15 @@ export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisibl
           </div>
         </DropdownTrigger>
         <DropdownMenu position="right">
-          <div className="w-44 flex justify-center items-center flex-col py-4 rounded border border-border bg-surface-1"></div>
+          <div className="w-40 flex justify-center items-center flex-col p-1 rounded border border-border bg-surface-1">
+            <DropdownItem option="Edit"/>
+            <DropdownItem option="Duplicate"/>
+            <DropdownItem option="Favourite"/>
+            <hr className="w-full border-border my-1"/>
+            <DropdownItem option="Tags"/>
+            <hr className="w-full border-border my-1"/>
+            <DropdownItem option="Delete"/>
+          </div>
         </DropdownMenu>
       </Dropdown>
 
