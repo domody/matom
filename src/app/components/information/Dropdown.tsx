@@ -81,7 +81,7 @@ function Dropdown({
   );
 }
 
-function DropdownTrigger({ children }: { children: React.ReactNode }) {
+function DropdownTrigger({ children, className }: { children: React.ReactNode; className?: string; }) {
   const context = useContext(DropdownContext);
   if (!context) throw new Error("DropdownTrigger must be used inside Dropdown");
 
@@ -94,7 +94,7 @@ function DropdownTrigger({ children }: { children: React.ReactNode }) {
       onClick={onHover ? undefined : toggleMenuOpen}
       onMouseEnter={onHover ? openMenu : undefined}
       onMouseLeave={onHover ? closeMenu : undefined}
-      className="h-full"
+      className={cn("h-full", className)}
     >
       {children}
     </div>

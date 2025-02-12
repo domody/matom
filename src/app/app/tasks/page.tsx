@@ -22,6 +22,8 @@ import {
   Minimize2,
   SquarePen,
   Share2,
+  Copy,
+  Check
 } from "lucide-react";
 import {
   Dropdown,
@@ -113,9 +115,15 @@ export default function Tasks() {
     setTaskVisible(true);
     const newUrl = `${pathname}?tk=${task.uuid}`;
     console.log(newUrl);
-    router.push(newUrl, { scroll: false });
+    router.replace(newUrl, { scroll: false });
   };
 
+  const closeTask = () => {
+    setTaskMaximised(false);
+    setTaskVisible(false);
+    router.replace(pathname, { scroll : false })
+    
+  }
   useEffect(() => {
     const fetchRenderedMarkdown = async () => {
       if (!selectedTask?.body) return;
@@ -134,8 +142,7 @@ export default function Tasks() {
 
   useEscapeKey(() => {
     if (selectedTask) {
-      setTaskVisible(false);
-      setTaskMaximised(false);
+      closeTask()
     }
   });
 
@@ -149,7 +156,7 @@ export default function Tasks() {
         </div>
         <div className="flex h-full w-full">
           <div className="scrollbar-hide flex w-full shrink-0 flex-col overflow-y-auto pb-36 transition-all">
-            <div className="bg-surface-1 border-border-muted flex h-9 w-full shrink-0 items-center justify-start border-b px-4 py-1">
+            <div className="bg-surface-1 border-border-muted flex h-9 w-full shrink-0 items-center justify-start border-b px-4 py-1 sticky top-0 left-0">
               <Dropdown className="flex h-full items-center">
                 <DropdownTrigger>
                   <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
@@ -271,24 +278,29 @@ export default function Tasks() {
                   <DropdownMenu position="right">
                     <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border py-4 shadow-lg">
                       <div className="mb-2 w-full px-4">
-                        <p className="text-text-primary font-medium">Filters</p>
+                        <p className="text-text-primary font-medium">Share</p>
                         <hr className="border-border mt-2" />
                       </div>
                       <div className="flex flex-col px-4">
                         <p className="text-text-muted mt-2 mb-0.5 text-sm">
-                          Copy Link UNFINSHED DONT LEAVE IT LLIKE THIS
+                          Copy Link
                         </p>
                         <div
-                          className="bg-surface-2 group scrollbar-hide max-w-96 cursor-pointer overflow-x-scroll rounded p-2 text-nowrap"
+                          className="group bg-surface-2 border border-border-muted relative group cursor-pointer rounded text-nowrap 
+                          after:absolute after:h-full after:w-30 after:bg-gradient-to-r after:to-75% after:from-primary/0 after:to-surface-2 after:top-0 after:right-0"
+                        
                           onClick={() => {
                             navigator.clipboard.writeText(
                               `${pathname}?tk=${selectedTask.uuid}`,
                             );
                           }}
                         >
-                          <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
-                            ${pathname}?tk=${selectedTask.uuid}
-                          </p>
+                          <Copy size={16} className="absolute top-2.5 opacity-0 group-hover:opacity-100 right-2 z-10 transition-all stroke-text-secondary" />
+                          <div className="w-full h-full overflow-x-scroll max-w-[19rem] p-2 scrollbar-hide">
+                            <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
+                              ${pathname}?tk=${selectedTask.uuid}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -297,10 +309,7 @@ export default function Tasks() {
 
                 <div
                   className="hover:bg-surface-1 text-text-muted hover:text-text-secondary cursor-pointer rounded p-1.5 transition-all"
-                  onClick={() => {
-                    setTaskMaximised(false);
-                    setTaskVisible(false);
-                  }}
+                  onClick={() => closeTask()}
                 >
                   <X size={16} />
                 </div>
@@ -315,7 +324,7 @@ export default function Tasks() {
                   data={
                     <div className="flex items-center justify-start gap-x-2">
                       <div
-                        className={`cursor-pointer rounded p-[0.334rem] ${statusBackgroundStyleClass(selectedTask.status)}`}
+                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${statusBackgroundStyleClass(selectedTask.status)}`}
                       >
                         {React.createElement(
                           statusIconMap[selectedTask.status],
@@ -339,7 +348,7 @@ export default function Tasks() {
                   data={
                     <div className="flex items-center justify-start gap-x-2">
                       <div
-                        className={`cursor-pointer rounded p-[0.334rem] ${priorityBackgroundStyleClass(selectedTask.priority)}`}
+                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${priorityBackgroundStyleClass(selectedTask.priority)}`}
                       >
                         {React.createElement(
                           priorityIconMap[selectedTask.priority],

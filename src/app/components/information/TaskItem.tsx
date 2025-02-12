@@ -10,6 +10,11 @@ import {
   priorityIconStyleClass,
   priorityBackgroundStyleClass,
 } from "@/app/utils/helpers/getIconFromString";
+import { 
+  Dropdown, 
+  DropdownMenu, 
+  DropdownTrigger 
+} from "@/app/components/information/Dropdown";
 /*
 Pass: 
  - Team
@@ -101,7 +106,7 @@ export interface TaskProps {
 interface TaskItemProps {
   task: TaskProps;
   handleTaskClick: (task: TaskProps) => void;
-  setSelectedTask: Dispatch<SetStateAction<TaskItemProps | null>>;
+  setSelectedTask: Dispatch<SetStateAction<TaskProps | null>>;
   setTaskVisible: Dispatch<SetStateAction<boolean>>;
   isSelected: boolean;
 }
@@ -151,9 +156,17 @@ export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisibl
       <p className="srhink-0 text-text-muted w-20 text-left text-nowrap">
         {getDateString(task.endDate)}
       </p>
-      <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
-        <Ellipsis size={16} className="stroke-text-muted" />
-      </div>
+      <Dropdown className="h-full">
+        <DropdownTrigger className="">
+          <div className="hover:bg-surface-2 flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all">
+            <Ellipsis size={16} className="stroke-text-muted" />
+          </div>
+        </DropdownTrigger>
+        <DropdownMenu position="right">
+          <div className="w-44 flex justify-center items-center flex-col py-4 rounded border border-border bg-surface-1"></div>
+        </DropdownMenu>
+      </Dropdown>
+
     </div>
   );
 }

@@ -59,7 +59,7 @@ function FiltersDropdownItem({
       </div>
       <div
         className={`bg-primary flex w-full flex-col overflow-hidden transition-all`}
-        style={{ height: isOpen ? childrenCount * 36 : 0 }}
+        style={{ height: isOpen ? childrenCount * 32 : 0 }}
       >
         {children}
       </div>
@@ -72,7 +72,7 @@ function FiltersDropdownOption({ option }: { option: string }) {
   const isActive = false;
   return (
     <div
-      className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-9 shrink cursor-pointer items-center justify-between overflow-hidden px-4 py-2 transition-all`}
+      className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-8 shrink cursor-pointer items-center justify-between overflow-hidden px-4 py-2 transition-all`}
     >
       <p className="">{option}</p>
       {isActive && <Check size={16} />}
