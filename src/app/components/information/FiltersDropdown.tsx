@@ -33,14 +33,13 @@ function FiltersDropdownItem({
       "FiltersDropdownItem must be used within a FiltersDropdown",
     );
 
-  const childrenCount = React.Children.count(children);
-
   const { openItem, setOpenItem } = context;
   const isOpen = openItem === title;
 
   const handleClick = () => {
     setOpenItem(isOpen ? null : title); // Toggle logic
   };
+  const childrenCount = React.Children.count(children);
 
   return (
     <div className="flex w-full flex-col">
@@ -68,14 +67,43 @@ function FiltersDropdownItem({
 }
 
 import { Check } from "lucide-react";
-function FiltersDropdownOption({ option }: { option: string }) {
-  const isActive = false;
+import { HTMLAttributes } from "react";
+import { DropdownItem } from "./Dropdown";
+
+interface FiltersDropdownOptionProps extends HTMLAttributes<HTMLDivElement> {
+  option: string;
+  isActive?: boolean;
+}
+function FiltersDropdownOption({
+  option,
+  isActive,
+  onClick,
+  ...props
+}: FiltersDropdownOptionProps) {
+  const context = useContext(FiltersDropdownContext);
+  if (!context)
+    throw new Error(
+      "FiltersDropdownOption must be used within a FiltersDropdown",
+    );
+
+  const { openItem, setOpenItem } = context;
+
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setOpenItem(null); // Closes the dropdown item
+    if (onClick) onClick(event); // Calls the passed-in onClick function
+  };
+
   return (
     <div
-      className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-8 shrink cursor-pointer items-center justify-between overflow-hidden px-4 py-2 transition-all`}
+      {...props}
+      onClick={handleClick}
+      className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-8 shrink cursor-pointer items-center justify-between overflow-hidden transition-all`}
     >
-      <p className="">{option}</p>
-      {isActive && <Check size={16} />}
+      <DropdownItem
+        option={option}
+        className="hover:!bg-surface-3/0 px-4"
+        endIcon={isActive ? <Check size={16} /> : undefined} // ✅ Add Check icon if active
+      />
     </div>
   );
 }

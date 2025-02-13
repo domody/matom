@@ -81,7 +81,13 @@ function Dropdown({
   );
 }
 
-function DropdownTrigger({ children, className }: { children: React.ReactNode; className?: string; }) {
+function DropdownTrigger({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   const context = useContext(DropdownContext);
   if (!context) throw new Error("DropdownTrigger must be used inside Dropdown");
 
@@ -91,10 +97,14 @@ function DropdownTrigger({ children, className }: { children: React.ReactNode; c
   return (
     <div
       ref={dropdownTriggerRef}
-      onClick={onHover ? undefined : (e) => {
-        toggleMenuOpen();
-        e.stopPropagation();
-      }}
+      onClick={
+        onHover
+          ? undefined
+          : (e) => {
+              toggleMenuOpen();
+              e.stopPropagation();
+            }
+      }
       onMouseEnter={onHover ? openMenu : undefined}
       onMouseLeave={onHover ? closeMenu : undefined}
       className={cn("h-full", className)}
@@ -142,18 +152,34 @@ function DropdownMenu({
   );
 }
 
-function DropdownItem({option}: {option: string}) {
+import { LucideIcon } from "lucide-react";
+
+interface DropdownItemProps {
+  option: string;
+  endIcon?: React.ReactNode;
+  className?: string;
+}
+function DropdownItem({ option, endIcon, className }: DropdownItemProps) {
   const context = useContext(DropdownContext);
   if (!context) throw new Error("DropdownItem must be used inside Dropdown");
 
-  const {closeMenu} = context
+  const { closeMenu } = context;
 
   const handleClick = () => {
-    closeMenu()
-  }
-  
+    closeMenu();
+  };
+
   return (
-    <div className="w-full rounded-md py-1.5 px-2 hover:bg-surface-3/50 transition-all text-text-secondary hover:text-text-primary" onClick={() => handleClick()}>{option}</div>
-  )
+    <div
+      className={cn(
+        "hover:bg-surface-3/50 text-text-secondary hover:text-text-primary flex w-full items-center justify-start rounded-md px-2 py-1.5 transition-all",
+        className,
+      )}
+      onClick={() => handleClick()}
+    >
+      <p>{option}</p>
+      <div className="ml-auto">{endIcon}</div>
+    </div>
+  );
 }
 export { Dropdown, DropdownMenu, DropdownTrigger, DropdownItem };
