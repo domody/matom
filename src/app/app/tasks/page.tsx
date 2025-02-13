@@ -175,13 +175,25 @@ export default function Tasks() {
   const toggleFilter = (category: string, option: string) => {
     console.log("hello");
     setSelectedFilters((prev) => {
-      const updatedFilters = new Set(prev[category]); // Copy current set
+      const updatedFilters = new Set(prev[category]);
       if (updatedFilters.has(option)) {
-        updatedFilters.delete(option); // Remove if already selected
+        updatedFilters.delete(option);
       } else {
-        updatedFilters.add(option); // Add if not selected
+        updatedFilters.add(option);
       }
       return { ...prev, [category]: updatedFilters };
+    });
+  };
+
+  const clearFilters = () => {
+    setSelectedFilters({
+      tags: new Set(),
+      priority: new Set(),
+      status: new Set(),
+      team: new Set(),
+      assignees: new Set(),
+      dueDate: new Set(),
+      lastUpdated: new Set(),
     });
   };
 
@@ -195,7 +207,7 @@ export default function Tasks() {
         </div>
         <div className="flex h-full w-full">
           <div className="scrollbar-hide flex w-full shrink-0 flex-col overflow-y-auto pb-36 transition-all">
-            <div className="bg-surface-1 border-border-muted sticky top-0 left-0 flex h-9 w-full shrink-0 items-center justify-start border-b px-4 py-1">
+            <div className="bg-surface-1 border-border-muted sticky top-0 left-0 flex h-9 w-full shrink-0 items-center justify-start space-x-4 border-b px-4 py-1">
               <Dropdown className="flex h-full items-center">
                 <DropdownTrigger>
                   <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
@@ -336,6 +348,46 @@ export default function Tasks() {
                   </div>
                 </DropdownMenu>
               </Dropdown>
+
+              {Object.entries(selectedFilters).map(
+                ([filterCategory, filterSet]) => {
+                  if (filterSet.size === 0) return null; // Hide empty categories
+
+                  return (
+                    <div
+                      key={filterCategory}
+                      className="border-border flex items-center rounded-md border border-dashed text-xs"
+                    >
+                      <p className="text-text-secondary peer hover:bg-surface-2/75 cursor-pointer rounded-l-md px-3 py-1 transition-all">
+                        {String(filterCategory).charAt(0).toUpperCase() +
+                          String(filterCategory).slice(1)}
+                      </p>
+                      <div className="text-text-secondary peer peer-hover:bg-surface-2/75 flex items-center justify-start transition-all">
+                        {[...filterSet].map((filterValue) => (
+                          <div
+                            key={filterValue}
+                            className="border-border hover:bg-surface-2/50 cursor-pointer rounded-sm border-l border-dashed px-3 py-1 transition-all"
+                          >
+                            {String(filterValue)
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                },
+              )}
+
+              {Object.values(selectedFilters).some((set) => set.size > 0) && (
+                <div
+                  className="hover:bg-surface-2/50 text-text-muted hover:text-text-primary flex cursor-pointer items-center justify-center space-x-1 rounded-md px-2 py-1 text-sm transition-all"
+                  onClick={clearFilters}
+                >
+                  <X size={16} />
+                  <p>Clear</p>
+                </div>
+              )}
             </div>
             {filteredTasks.map((task, index) => (
               <TaskItem

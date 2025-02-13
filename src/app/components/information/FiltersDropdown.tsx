@@ -89,8 +89,8 @@ function FiltersDropdownOption({
   const { openItem, setOpenItem } = context;
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setOpenItem(null); // Closes the dropdown item
-    if (onClick) onClick(event); // Calls the passed-in onClick function
+    setOpenItem(null);
+    if (onClick) onClick(event);
   };
 
   return (
@@ -100,9 +100,9 @@ function FiltersDropdownOption({
       className={`hover:bg-surface-2 hover:text-text-secondary text-text-muted z-0 flex h-8 shrink cursor-pointer items-center justify-between overflow-hidden transition-all`}
     >
       <DropdownItem
-        option={option}
+        option={String(option).replace(/([A-Z])/g, ' $1').trim()}
         className="hover:!bg-surface-3/0 px-4"
-        endIcon={isActive ? <Check size={16} /> : undefined} // ✅ Add Check icon if active
+        endIcon={isActive ? <Check size={16} /> : undefined}
       />
     </div>
   );
