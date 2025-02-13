@@ -1,15 +1,26 @@
 "use client";
 import * as React from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/app/utils/cn";
-import appData from "@/app/app/appData.json";
-import { useState } from "react";
-import { useEffect } from "react";
-
+import { useRouter } from 'next/navigation'
 
 export function ChatMessage({ className, author, content, firstMessage, clientOwned }: { className?: string, author: string, firstMessage: boolean, content: string, clientOwned: boolean }) {
     var flattenRightEdge = clientOwned && !firstMessage;
     var flattenLeftEdge = !clientOwned && !firstMessage;
+    var taskStart = content.indexOf("app/tasks?tk=");
+    var taskEnd = content.indexOf(" ", taskStart);
+    
+    if (taskEnd > 36+13+taskStart)
+        var taskEnd = taskStart + 36 + 13;
+
+    var task = "";
+
+    if (taskStart != -1)
+        task = content.slice(taskStart + 13, taskEnd);
+        content = content.replace("app/tasks?tk="+task, "");
+    
+    const router = useRouter();
+
+    console.log('/app/tasks?tk='+task);
+
     return (
     <div>
 
@@ -31,9 +42,16 @@ export function ChatMessage({ className, author, content, firstMessage, clientOw
         : null
         }
         </div>
-            
-        <div className={`px-3 py-1 mt-0.5 max-w-3/4 md:max-w-1/2 rounded-t-xl w-max text-lg  ${flattenRightEdge ? "!rounded-r-xs" : ""} ${flattenLeftEdge ? "!rounded-l-xs" : ""} ${clientOwned ? "bg-accent-muted rounded-l-xl rounded-br-xs ml-auto" : "bg-surface-3 rounded-r-xl rounded-bl-xs mr-auto"}`}>
+        <div className={`items-end gap-x-1 px-3 py-1 mt-0.5 max-w-3/4 md:max-w-1/2 rounded-t-xl w-max text-lg  ${flattenRightEdge ? "!rounded-r-xs" : ""} ${flattenLeftEdge ? "!rounded-l-xs" : ""} ${clientOwned ? "bg-accent-muted rounded-l-xl rounded-br-xs ml-auto" : "bg-surface-3 rounded-r-xl rounded-bl-xs mr-auto"}`}>
             {content}
+            {
+            taskStart != -1 ?
+            (<div className="bg-surface-3 w-max shadow text-text-secondary rounded-xl border-2 px-2 py-0.5 border-surface-1" onClick={() => router.push('/app/tasks?tk='+task)}>
+                Task {task}
+            </div>)
+            : null
+            }
+            
         </div>
     </div>
   );
