@@ -23,7 +23,7 @@ import {
   SquarePen,
   Share2,
   Copy,
-  Check
+  Check,
 } from "lucide-react";
 import {
   Dropdown,
@@ -95,6 +95,16 @@ export default function Tasks() {
   const [taskMaximised, setTaskMaximised] = useState<boolean>(false);
   const [taskHtmlContent, setTaskHtmlContent] = useState<string | null>(null);
 
+  const [selectedFilters, setSelectedFilters] = useState({
+    tags: new Set(),
+    priority: new Set(),
+    status: new Set(),
+    team: new Set(),
+    assignees: new Set(),
+    dueDate: new Set(),
+    lastUpdated: new Set(),
+  });
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -106,12 +116,10 @@ export default function Tasks() {
       if (task) {
         setTaskVisible(true);
         setSelectedTask(task);
-      }
-      else {
-        router.replace(pathname, { scroll: false })
+      } else {
+        router.replace(pathname, { scroll: false });
       }
     }
-
   }, [searchParams, fakeTasks]);
 
   const handleTaskClick = (task: TaskProps) => {
@@ -125,9 +133,8 @@ export default function Tasks() {
   const closeTask = () => {
     setTaskMaximised(false);
     setTaskVisible(false);
-    router.replace(pathname, { scroll : false })
-    
-  }
+    router.replace(pathname, { scroll: false });
+  };
   useEffect(() => {
     const fetchRenderedMarkdown = async () => {
       if (!selectedTask?.body) return;
@@ -146,9 +153,49 @@ export default function Tasks() {
 
   useEscapeKey(() => {
     if (selectedTask) {
-      closeTask()
+      closeTask();
     }
   });
+
+  const filteredTasks = fakeTasks.filter((task) => {
+    return (
+      (selectedFilters.tags.size === 0 ||
+        selectedFilters.tags.has(task.tags[0])) &&
+      (selectedFilters.priority.size === 0 ||
+        selectedFilters.priority.has(task.priority)) &&
+      (selectedFilters.status.size === 0 ||
+        selectedFilters.status.has(task.status)) &&
+      (selectedFilters.team.size === 0 ||
+        selectedFilters.team.has(task.team)) &&
+      (selectedFilters.assignees.size === 0 ||
+        task.assignedUsers.some((user) => selectedFilters.assignees.has(user)))
+    );
+  });
+
+  const toggleFilter = (category: string, option: string) => {
+    console.log("hello");
+    setSelectedFilters((prev) => {
+      const updatedFilters = new Set(prev[category]);
+      if (updatedFilters.has(option)) {
+        updatedFilters.delete(option);
+      } else {
+        updatedFilters.add(option);
+      }
+      return { ...prev, [category]: updatedFilters };
+    });
+  };
+
+  const clearFilters = () => {
+    setSelectedFilters({
+      tags: new Set(),
+      priority: new Set(),
+      status: new Set(),
+      team: new Set(),
+      assignees: new Set(),
+      dueDate: new Set(),
+      lastUpdated: new Set(),
+    });
+  };
 
   return (
     <>
@@ -160,7 +207,7 @@ export default function Tasks() {
         </div>
         <div className="flex h-full w-full">
           <div className="scrollbar-hide flex w-full shrink-0 flex-col overflow-y-auto pb-36 transition-all">
-            <div className="bg-surface-1 border-border-muted flex h-9 w-full shrink-0 items-center justify-start border-b px-4 py-1 sticky top-0 left-0">
+            <div className="bg-surface-1 border-border-muted sticky top-0 left-0 flex h-9 w-full shrink-0 items-center justify-start space-x-4 border-b px-4 py-1">
               <Dropdown className="flex h-full items-center">
                 <DropdownTrigger>
                   <div className="hover:bg-surface-2 flex h-full cursor-pointer items-center justify-center space-x-2 rounded px-[0.344rem]">
@@ -177,66 +224,182 @@ export default function Tasks() {
                     <div className="flex w-full flex-col text-sm">
                       <FiltersDropdown>
                         <FiltersDropdownItem title="Tags">
-                          <FiltersDropdownOption option="Bug" />
-                          <FiltersDropdownOption option="Feature" />
-                          <FiltersDropdownOption option="Enhancement" />
-                          <FiltersDropdownOption option="Critical" />
-                          <FiltersDropdownOption option="Design" />
+                          {[
+                            "Bug",
+                            "Feature",
+                            "Enhancement",
+                            "Critical",
+                            "Design",
+                          ].map((tag) => (
+                            <FiltersDropdownOption
+                              key={tag}
+                              option={tag}
+                              onClick={() => toggleFilter("tags", tag)}
+                              isActive={selectedFilters.tags.has(tag)}
+                            />
+                          ))}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Priority">
-                          <FiltersDropdownOption option="Low" />
-                          <FiltersDropdownOption option="Medium" />
-                          <FiltersDropdownOption option="High" />
-                          <FiltersDropdownOption option="Critical" />
+                          {["Low", "Medium", "High", "Critical"].map(
+                            (priority) => (
+                              <FiltersDropdownOption
+                                key={priority}
+                                option={priority}
+                                onClick={() =>
+                                  toggleFilter("priority", priority)
+                                }
+                                isActive={selectedFilters.priority.has(
+                                  priority,
+                                )}
+                              />
+                            ),
+                          )}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Status">
-                          <FiltersDropdownOption option="Pending" />
-                          <FiltersDropdownOption option="In Progress" />
-                          <FiltersDropdownOption option="In Review" />
-                          <FiltersDropdownOption option="Completed" />
-                          <FiltersDropdownOption option="Blocked" />
+                          {[
+                            "Pending",
+                            "InProgress",
+                            "InReview",
+                            "Completed",
+                            "Blocked",
+                          ].map((status) => (
+                            <FiltersDropdownOption
+                              key={status}
+                              option={status}
+                              onClick={() => toggleFilter("status", status)}
+                              isActive={selectedFilters.status.has(status)}
+                            />
+                          ))}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Team">
-                          <FiltersDropdownOption option="Engineering" />
-                          <FiltersDropdownOption option="Development" />
-                          <FiltersDropdownOption option="Human Resources" />
-                          <FiltersDropdownOption option="Marketing" />
-                          <FiltersDropdownOption option="Sales" />
+                          {[
+                            "Engineering",
+                            "Development",
+                            "Human Resources",
+                            "Marketing",
+                            "Sales",
+                          ].map((team) => (
+                            <FiltersDropdownOption
+                              key={team}
+                              option={team}
+                              onClick={() => toggleFilter("team", team)}
+                              isActive={selectedFilters.team.has(team)}
+                            />
+                          ))}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Assignees">
-                          <FiltersDropdownOption option="Alice" />
-                          <FiltersDropdownOption option="Bob" />
-                          <FiltersDropdownOption option="Charlie" />
-                          <FiltersDropdownOption option="Dave" />
-                          <FiltersDropdownOption option="Eve" />
+                          {["Alice", "Bob", "Charlie", "Dave", "Eve"].map(
+                            (assignee) => (
+                              <FiltersDropdownOption
+                                key={assignee}
+                                option={assignee}
+                                onClick={() =>
+                                  toggleFilter("assignees", assignee)
+                                }
+                                isActive={selectedFilters.assignees.has(
+                                  assignee,
+                                )}
+                              />
+                            ),
+                          )}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Due Date">
-                          <FiltersDropdownOption option="Today" />
-                          <FiltersDropdownOption option="This Week" />
-                          <FiltersDropdownOption option="This Month" />
-                          <FiltersDropdownOption option="Overdue" />
-                          <FiltersDropdownOption option="Custom Range..." />
+                          {[
+                            "Today",
+                            "This Week",
+                            "This Month",
+                            "Overdue",
+                            "Custom Range...",
+                          ].map((dueDate) => (
+                            <FiltersDropdownOption
+                              key={dueDate}
+                              option={dueDate}
+                              onClick={() => toggleFilter("dueDate", dueDate)}
+                              isActive={selectedFilters.dueDate.has(dueDate)}
+                            />
+                          ))}
                         </FiltersDropdownItem>
 
                         <FiltersDropdownItem title="Last Updated">
-                          <FiltersDropdownOption option="Last 24 Hours" />
-                          <FiltersDropdownOption option="Last 7 Days" />
-                          <FiltersDropdownOption option="Last 30 Days" />
-                          <FiltersDropdownOption option="Last 6 Months" />
-                          <FiltersDropdownOption option="Custom Range..." />
+                          {[
+                            "Last 24 Hours",
+                            "Last 7 Days",
+                            "Last 30 Days",
+                            "Last 6 Months",
+                            "Custom Range...",
+                          ].map((update) => (
+                            <FiltersDropdownOption
+                              key={update}
+                              option={update}
+                              onClick={() =>
+                                toggleFilter("lastUpdated", update)
+                              }
+                              isActive={selectedFilters.lastUpdated.has(update)}
+                            />
+                          ))}
                         </FiltersDropdownItem>
                       </FiltersDropdown>
                     </div>
                   </div>
                 </DropdownMenu>
               </Dropdown>
+
+              {Object.entries(selectedFilters).map(
+                ([filterCategory, filterSet]) => {
+                  if (filterSet.size === 0) return null; // Hide empty categories
+
+                  return (
+                    <div
+                      key={filterCategory}
+                      className="border-border flex items-center rounded-md border border-dashed text-xs"
+                    >
+                      <p className="text-text-secondary peer hover:bg-surface-2/75 cursor-pointer rounded-l-md px-3 py-1 transition-all">
+                        {String(filterCategory).charAt(0).toUpperCase() +
+                          String(filterCategory).slice(1)}
+                      </p>
+                      <div className="text-text-secondary peer peer-hover:bg-surface-2/75 flex items-center justify-start transition-all">
+                        {[...filterSet].map((filterValue) => (
+                          <div
+                            key={filterValue}
+                            className="border-border hover:bg-surface-2/50 cursor-pointer rounded-sm border-l border-dashed px-3 py-1 transition-all"
+                            onClick={() => {
+                              setSelectedFilters((prevFilters) => {
+                                const updatedSet = new Set(prevFilters[filterCategory]);
+                                updatedSet.delete(filterValue);
+                                return {
+                                  ...prevFilters,
+                                  [filterCategory]: updatedSet,
+                                };
+                              });
+                            }}
+                          >
+                            {String(filterValue)
+                              .replace(/([A-Z])/g, " $1")
+                              .trim()}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                },
+              )}
+
+              {Object.values(selectedFilters).some((set) => set.size > 0) && (
+                <div
+                  className="hover:bg-surface-2/50 text-text-muted hover:text-text-primary flex cursor-pointer items-center justify-center space-x-1 rounded-md px-2 py-1 text-sm transition-all"
+                  onClick={clearFilters}
+                >
+                  <X size={16} />
+                  <p>Clear</p>
+                </div>
+              )}
             </div>
-            {fakeTasks.map((task, index) => (
+            {filteredTasks.map((task, index) => (
               <TaskItem
                 task={task}
                 handleTaskClick={handleTaskClick}
@@ -280,7 +443,7 @@ export default function Tasks() {
                     </div>
                   </DropdownTrigger>
                   <DropdownMenu position="right">
-                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border py-4 shadow-lg">
+                    <div className="bg-surface-1 border-border-muted flex flex-col items-start justify-start rounded border py-4 shadow-lg">
                       <div className="mb-2 w-full px-4">
                         <p className="text-text-primary font-medium">Share</p>
                         <hr className="border-border mt-2" />
@@ -290,17 +453,18 @@ export default function Tasks() {
                           Copy Link
                         </p>
                         <div
-                          className="group bg-surface-2 border border-border-muted relative group cursor-pointer rounded text-nowrap 
-                          after:absolute after:h-full after:w-30 after:bg-gradient-to-r after:to-75% after:from-primary/0 after:to-surface-2 after:top-0 after:right-0"
-                        
+                          className="group bg-surface-2 border-border group after:from-primary/0 after:to-surface-2 relative cursor-pointer rounded border text-nowrap after:absolute after:top-0 after:right-0 after:h-full after:w-30 after:bg-gradient-to-r after:to-75%"
                           onClick={() => {
                             navigator.clipboard.writeText(
                               `${pathname}?tk=${selectedTask.uuid}`,
                             );
                           }}
                         >
-                          <Copy size={16} className="absolute top-2.5 opacity-0 group-hover:opacity-100 right-2 z-10 transition-all stroke-text-secondary" />
-                          <div className="w-full h-full overflow-x-scroll max-w-[19rem] p-2 scrollbar-hide">
+                          <Copy
+                            size={16}
+                            className="stroke-text-secondary absolute top-2.5 right-2 z-10 opacity-0 transition-all group-hover:opacity-100"
+                          />
+                          <div className="scrollbar-hide h-full w-full max-w-48 overflow-x-scroll p-2">
                             <p className="text-text-secondary group-hover:text-text-primary text-sm transition-all">
                               ${pathname}?tk=${selectedTask.uuid}
                             </p>
@@ -328,7 +492,7 @@ export default function Tasks() {
                   data={
                     <div className="flex items-center justify-start gap-x-2">
                       <div
-                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${statusBackgroundStyleClass(selectedTask.status)}`}
+                        className={`flex size-7 cursor-pointer items-center justify-center rounded ${statusBackgroundStyleClass(selectedTask.status)}`}
                       >
                         {React.createElement(
                           statusIconMap[selectedTask.status],
@@ -352,7 +516,7 @@ export default function Tasks() {
                   data={
                     <div className="flex items-center justify-start gap-x-2">
                       <div
-                        className={`cursor-pointer rounded size-7 flex justify-center items-center ${priorityBackgroundStyleClass(selectedTask.priority)}`}
+                        className={`flex size-7 cursor-pointer items-center justify-center rounded ${priorityBackgroundStyleClass(selectedTask.priority)}`}
                       >
                         {React.createElement(
                           priorityIconMap[selectedTask.priority],
@@ -445,7 +609,7 @@ export default function Tasks() {
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex w-full flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
+                  className="prose prose-headings:text-text-secondary prose-a:text-text-secondary prose-a:hover:text-text-primary prose-a:transition-all prose-h3:mt-4 prose-p:text-text-secondary prose-pre:bg-surface-1 prose-pre:border-border prose-pre:overflow-x-auto prose-pre:rounded prose-pre:border prose-pre:p-4 flex w-full max-w-none flex-col space-y-2 transition-all"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
