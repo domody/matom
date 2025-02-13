@@ -367,6 +367,16 @@ export default function Tasks() {
                           <div
                             key={filterValue}
                             className="border-border hover:bg-surface-2/50 cursor-pointer rounded-sm border-l border-dashed px-3 py-1 transition-all"
+                            onClick={() => {
+                              setSelectedFilters((prevFilters) => {
+                                const updatedSet = new Set(prevFilters[filterCategory]);
+                                updatedSet.delete(filterValue);
+                                return {
+                                  ...prevFilters,
+                                  [filterCategory]: updatedSet,
+                                };
+                              });
+                            }}
                           >
                             {String(filterValue)
                               .replace(/([A-Z])/g, " $1")
@@ -433,7 +443,7 @@ export default function Tasks() {
                     </div>
                   </DropdownTrigger>
                   <DropdownMenu position="right">
-                    <div className="bg-surface-1 border-border flex flex-col items-start justify-start rounded border py-4 shadow-lg">
+                    <div className="bg-surface-1 border-border-muted flex flex-col items-start justify-start rounded border py-4 shadow-lg">
                       <div className="mb-2 w-full px-4">
                         <p className="text-text-primary font-medium">Share</p>
                         <hr className="border-border mt-2" />
@@ -443,7 +453,7 @@ export default function Tasks() {
                           Copy Link
                         </p>
                         <div
-                          className="group bg-surface-2 border-border-muted group after:from-primary/0 after:to-surface-2 relative cursor-pointer rounded border text-nowrap after:absolute after:top-0 after:right-0 after:h-full after:w-30 after:bg-gradient-to-r after:to-75%"
+                          className="group bg-surface-2 border-border group after:from-primary/0 after:to-surface-2 relative cursor-pointer rounded border text-nowrap after:absolute after:top-0 after:right-0 after:h-full after:w-30 after:bg-gradient-to-r after:to-75%"
                           onClick={() => {
                             navigator.clipboard.writeText(
                               `${pathname}?tk=${selectedTask.uuid}`,
@@ -599,7 +609,7 @@ export default function Tasks() {
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="[&>pre]:bg-surface-1 [&>pre]:border-border [&>p]:text-text-secondary flex w-full flex-col space-y-2 [&>h3]:mt-4 [&>pre]:overflow-x-auto [&>pre]:rounded [&>pre]:border [&>pre]:p-4"
+                  className="prose prose-headings:text-text-secondary prose-a:text-text-secondary prose-a:hover:text-text-primary prose-a:transition-all prose-h3:mt-4 prose-p:text-text-secondary prose-pre:bg-surface-1 prose-pre:border-border prose-pre:overflow-x-auto prose-pre:rounded prose-pre:border prose-pre:p-4 flex w-full max-w-none flex-col space-y-2 transition-all"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
