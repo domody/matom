@@ -44,7 +44,7 @@ function FiltersDropdownItem({
   return (
     <div className="flex w-full flex-col">
       <div
-        className="hover:bg-surface-2/50 z-10 flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 px-4 transition-all"
+        className="hover:bg-surface-3/50 z-10 flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 px-4 transition-all"
         onClick={handleClick}
       >
         <ChevronRight

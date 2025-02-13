@@ -369,7 +369,9 @@ export default function Tasks() {
                             className="border-border hover:bg-surface-2/50 cursor-pointer rounded-sm border-l border-dashed px-3 py-1 transition-all"
                             onClick={() => {
                               setSelectedFilters((prevFilters) => {
-                                const updatedSet = new Set(prevFilters[filterCategory]);
+                                const updatedSet = new Set(
+                                  prevFilters[filterCategory],
+                                );
                                 updatedSet.delete(filterValue);
                                 return {
                                   ...prevFilters,
@@ -609,7 +611,7 @@ export default function Tasks() {
               </div>
               {taskHtmlContent ? (
                 <div
-                  className="prose prose-headings:text-text-secondary prose-a:text-text-secondary prose-a:hover:text-text-primary prose-a:transition-all prose-h3:mt-4 prose-p:text-text-secondary prose-pre:bg-surface-1 prose-pre:border-border prose-pre:overflow-x-auto prose-pre:rounded prose-pre:border prose-pre:p-4 flex w-full max-w-none flex-col space-y-2 transition-all"
+                  className="prose prose-headings:text-text-secondary prose-a:text-text-secondary prose-a:hover:text-text-primary prose-a:transition-all prose-h3:mt-4 prose-p:text-text-secondary prose-pre:bg-surface-2/50 prose-pre:border-border-muted prose-pre:overflow-x-auto prose-pre:rounded prose-pre:border prose-pre:p-4 flex w-full max-w-none flex-col space-y-2 transition-all"
                   dangerouslySetInnerHTML={{ __html: taskHtmlContent }}
                 />
               ) : (
