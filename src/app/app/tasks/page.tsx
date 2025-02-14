@@ -24,6 +24,7 @@ import {
   Share2,
   Copy,
   Check,
+  SlidersHorizontal,
 } from "lucide-react";
 import {
   Dropdown,
@@ -157,7 +158,15 @@ export default function Tasks() {
     }
   });
 
-  const filteredTasks = fakeTasks.filter((task) => {
+  const priorityOrder = ["Critical", "High", "Medium", "Low"];
+  const statusOrder = ["InProgress", "Pending", "InReview", "Blocked", "Completed"];
+
+  const sortedTasks = [...fakeTasks].sort(
+    (a: TaskProps, b: TaskProps) =>
+      statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status)
+  );
+
+  const filteredTasks = sortedTasks.filter((task) => {
     return (
       (selectedFilters.tags.size === 0 ||
         selectedFilters.tags.has(task.tags[0])) &&
@@ -196,6 +205,7 @@ export default function Tasks() {
       lastUpdated: new Set(),
     });
   };
+
 
   return (
     <>
@@ -400,16 +410,19 @@ export default function Tasks() {
                   <p>Clear</p>
                 </div>
               )}
+
+              <div className="p-1.5 rounded hover:bg-surface-3/50 transition-all ml-auto text-text-muted hover:text-text-secondary cursor-pointer">
+                <SlidersHorizontal size={16} />
+              </div>
             </div>
             {filteredTasks.map((task, index) => (
               <TaskItem
                 task={task}
                 handleTaskClick={handleTaskClick}
-                setSelectedTask={setSelectedTask}
                 isSelected={
                   selectedTask ? task.uuid == selectedTask.uuid : false
                 }
-                setTaskVisible={setTaskVisible}
+                toggleFilter={toggleFilter}
                 key={task.uuid} // Use UUID as a unique key
               />
             ))}

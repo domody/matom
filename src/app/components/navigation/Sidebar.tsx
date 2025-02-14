@@ -60,7 +60,12 @@ function SidebarLink({
   const IconComponent = icon ? iconMap[icon] : null;
   return (
     <a
-      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm transition-all ${pathname.startsWith(path) ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}`}
+      className={`group flex h-8 w-full cursor-pointer items-center justify-start gap-x-2 rounded px-2 text-sm transition-all 
+        ${path == '/' ?
+        pathname == path ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"
+        : 
+        pathname.startsWith(path) ? "bg-surface-2 text-text-primary" : "hover:bg-surface-2 text-text-muted"}
+        `}
       href={`/app${path}`}
     >
       {IconComponent && (

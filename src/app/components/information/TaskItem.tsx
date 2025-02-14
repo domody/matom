@@ -78,9 +78,15 @@ function getDateString(date: string, yearIncl: boolean = false) {
   return `${month} ${day.split("T")[0]} ${yearIncl ? year : ""}`; // "06 Feb 2025"
 }
 
-export function TaskItemTag({ tag }: { tag: string }) {
+export function TaskItemTag({ tag, toggleFilter }: { tag: string; toggleFilter: (category: string, option: string) => void; }) {
   return (
-    <div className="border-border bg-primary text-text-muted hover:bg-surface-2 hover:text-text-secondary cursor-pointer rounded-full border px-2 py-1 text-xs text-nowrap transition-all">
+    <div 
+    className="border-border bg-primary text-text-muted hover:bg-surface-2 hover:text-text-secondary cursor-pointer rounded-full border px-2 py-1 text-xs text-nowrap transition-all"
+    onClick={(e) =>  {
+      toggleFilter("tags", tag)
+      e.stopPropagation()
+    }}    
+    >
       {tag}
     </div>
   );
@@ -104,26 +110,30 @@ export interface TaskProps {
   lastUpdated: string;
 }
 
+
 interface TaskItemProps {
   task: TaskProps;
   handleTaskClick: (task: TaskProps) => void;
-  setSelectedTask: Dispatch<SetStateAction<TaskProps | null>>;
-  setTaskVisible: Dispatch<SetStateAction<boolean>>;
+  toggleFilter: (category: string, option: string) => void;
   isSelected: boolean;
 }
 
-export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisible, isSelected }: TaskItemProps) {
+export function TaskItem({ task, handleTaskClick, toggleFilter, isSelected }: TaskItemProps) {
   const PriorityIconComponent = task.priority
     ? priorityIconMap[task.priority]
     : null;
   const StatusIconComponent = task.status ? statusIconMap[task.status] : null;
   return (
     <div
-      className="hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all"
+      className={`hover:bg-surface-1 border-border flex h-9 w-full cursor-pointer items-center justify-start gap-x-4 border-b px-4 py-1 text-sm transition-all ${isSelected ? "bg-surface-1" : ""}`}
       onClick={() => handleTaskClick(task)}
     >
       <div
         className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${priorityBackgroundStyleClass(task.priority)}`}
+        onClick={(e) =>  {
+          toggleFilter("priority", task.priority)
+          e.stopPropagation()
+        }}
       >
         {PriorityIconComponent && (
           <PriorityIconComponent
@@ -137,6 +147,10 @@ export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisibl
       </p>
       <div
         className={`flex aspect-square h-full shrink-0 cursor-pointer items-center justify-center rounded transition-all ${statusBackgroundStyleClass(task.status)}`}
+        onClick={(e) =>  {
+          toggleFilter("status", task.status)
+          e.stopPropagation()
+        }}
       >
         {StatusIconComponent && (
           <StatusIconComponent
@@ -148,7 +162,7 @@ export function TaskItem({ task, handleTaskClick, setSelectedTask, setTaskVisibl
       <p className="text-text-secondary line-clamp-1 w-full">{task.title}</p>
       <TaskItemTagWrapper>
         {task.tags.map((tag, index) => (
-          <TaskItemTag tag={tag} key={index} />
+          <TaskItemTag tag={tag} key={index} toggleFilter={toggleFilter} />
         ))}
       </TaskItemTagWrapper>
       <p className="srhink-0 text-text-muted w-20 text-left text-nowrap">
